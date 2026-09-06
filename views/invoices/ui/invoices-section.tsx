@@ -1,11 +1,11 @@
 /**
- * @file app/invoices/ui/invoices-section.tsx
+ * @file views/invoices/ui/invoices-section.tsx
  * Async server component that fetches invoices and hands them to the table.
  *
  * Purpose: isolate the dynamic (cookie-reading, DB-hitting) work into a single
  *          Suspense child, so the page shell stays static/prerenderable under
  *          Next's `cacheComponents`.
- * Used in: app/invoices/page.tsx (wrapped in <Suspense>).
+ * Used in: app/invoices/page.tsx via @/views/invoices (wrapped in <Suspense>).
  * Used for: the server-first data fetch — the client receives ready HTML.
  *
  * Steps:
@@ -13,7 +13,7 @@
  * 2. Render the pure presentational table with the result.
  */
 
-import { listInvoices } from "@/entities/invoice";
+import { listInvoices } from "@/entities/invoice/server";
 import { InvoicesTable } from "./invoices-table";
 
 /**

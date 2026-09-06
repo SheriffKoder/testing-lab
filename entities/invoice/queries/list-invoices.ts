@@ -4,7 +4,7 @@
  *
  * Purpose: fetch rows from `tl_invoices` on the server and return them as domain
  *          Invoices, newest first.
- * Used in: app/invoices (server component section).
+ * Used in: views/invoices/ui/invoices-section.tsx (via @/entities/invoice/server).
  * Used for: the single read model behind the invoices list view.
  *
  * Steps:

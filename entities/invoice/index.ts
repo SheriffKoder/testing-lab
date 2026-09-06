@@ -1,11 +1,12 @@
 /**
  * @file entities/invoice/index.ts
- * Public API of the invoice entity — the only module outside code may import.
+ * Public API of the invoice entity — client-safe surface only.
  *
- * Purpose: expose the invoice domain types and use-cases while keeping internal
- *          layers (model/transform/queries) private.
- * Used in: app/invoices and any future feature/view that works with invoices.
- * Used for: enforcing the "only index is public" rule from file-structure.md.
+ * Purpose: expose domain types and pure helpers while keeping server I/O private.
+ * Used in: features, views, and tests that need Invoice shapes / status lists.
+ * Used for: enforcing FSD public API without pulling next/headers into clients.
+ *
+ * Server use-cases (listInvoices, …) live in `@/entities/invoice/server`.
  */
 
 ///////////////////////////////////////////////////////////////
@@ -17,8 +18,5 @@ export {
   type InvoiceStatus,
 } from "./model/invoice";
 
-// Read use-cases.
-export { listInvoices } from "./queries/list-invoices";
-
-// Transform (exposed for tests / reuse when mapping raw rows).
+// Transform (pure — safe for client and tests).
 export { toInvoice } from "./transform/to-invoice";

@@ -11,8 +11,8 @@
  */
 
 import { Suspense } from "react";
-import { InvoicesSection } from "../../views/invoices/ui/invoices-section";
-import { InvoicesTableSkeleton } from "../../views/invoices/ui/invoices-table-skeleton";
+import { InvoicesPageHeader, InvoicesTableSkeleton } from "@/views/invoices";
+import { InvoicesSection } from "@/views/invoices/server";
 
 /** Static route metadata. */
 export const metadata = {
@@ -25,13 +25,8 @@ export const metadata = {
 export default function InvoicesPage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8">
-      {/* Static header — safe to prerender (no request data used here). */}
-      <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Invoices</h1>
-        <p className="text-sm text-muted-foreground">
-          Loaded from Supabase (tl_invoices).
-        </p>
-      </header>
+      {/* Static header + Create invoice link — safe to prerender. */}
+      <InvoicesPageHeader />
 
       {/*
         Dynamic data lives inside Suspense: listInvoices() reads request cookies

@@ -8,7 +8,7 @@
  * Used for: an instant, layout-stable skeleton on first paint / navigation.
  */
 
-import { InvoicesTableSkeleton } from "@/views/invoices/ui/invoices-table-skeleton";
+import { InvoicesPageHeader, InvoicesTableSkeleton } from "@/views/invoices";
 
 /**
  * Render the invoices loading state (header + table skeleton).
@@ -16,12 +16,7 @@ import { InvoicesTableSkeleton } from "@/views/invoices/ui/invoices-table-skelet
 export default function Loading() {
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8">
-      <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Invoices</h1>
-        <p className="text-sm text-muted-foreground">
-          Loaded from Supabase (tl_invoices).
-        </p>
-      </header>
+      <InvoicesPageHeader />
       <InvoicesTableSkeleton />
     </main>
   );
