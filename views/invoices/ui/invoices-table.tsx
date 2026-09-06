@@ -1,15 +1,22 @@
 /**
- * @file app/invoices/ui/invoices-table.tsx
+ * @file views/invoices/ui/invoices-table.tsx
  * Presentational, Notion-style table that renders a list of invoices.
  *
  * Purpose: pure, dumb component — receives invoices and renders a semantic
  *          table (or an empty state). No data fetching, no side effects.
- * Used in: app/invoices/ui/invoices-section.tsx.
- * Used for: displaying invoices in Phase 0 (verification: invoices appear).
+ * Used in: views/invoices/ui/invoices-section.tsx.
+ * Used for: displaying invoices; amounts/status via tested format helpers.
+ *
+ * Steps:
+ * 1. Empty list → dashed empty-state card.
+ * 2. Otherwise render accessible table rows (customer, status, amount, due date).
+ * 3. Format amount with formatCurrency; status with formatInvoiceStatus.
  */
 
 import { cn } from "@/lib/utils";
 import type { Invoice, InvoiceStatus } from "@/entities/invoice";
+import { formatInvoiceStatus } from "@/entities/invoice/lib";
+import { formatCurrency } from "@/shared/lib";
 
 ///////////////////////////////////////////////////////////////
 // Presentation maps + formatters (module scope: built once, reused per render).
@@ -26,15 +33,8 @@ const STATUS_PILL: Record<InvoiceStatus, string> = {
 };
 
 /**
- * Currency + date formatters.
- *
- * NOTE: Phase 1 (Item 3) extracts these into tested `utils/` helpers
- * (`formatCurrency`, etc.); kept inline here to avoid pre-building that step.
+ * Date formatter kept inline — Phase 1 Item 3 only extracts currency + status.
  */
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   month: "short",
@@ -127,10 +127,10 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  {/* Soft status pill with a leading dot. */}
+                  {/* Soft status pill with a leading dot; label from formatInvoiceStatus. */}
                   <span
                     className={cn(
-                      "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium capitalize",
+                      "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium",
                       STATUS_PILL[invoice.status],
                     )}
                   >
@@ -138,11 +138,11 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
                       className="size-1.5 rounded-full bg-current opacity-80"
                       aria-hidden="true"
                     />
-                    {invoice.status}
+                    {formatInvoiceStatus(invoice.status)}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right font-medium tabular-nums text-foreground">
-                  {currencyFormatter.format(invoice.amount)}
+                  {formatCurrency(invoice.amount)}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
                   {dateFormatter.format(new Date(invoice.dueDate))}
