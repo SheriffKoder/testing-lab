@@ -12,6 +12,8 @@
  * 2. Force jsdom so React/RTL have document/window.
  * 3. Run tests/setupTests.ts after the env is ready (jest-dom matchers).
  * 4. Collect coverage from FSD source layers; skip barrels and declaration files.
+ * 5. Map `@/` in moduleNameMapper so `jest.mock("@/...")` resolves (SWC alone
+ *    rewrites imports, not Jest's mock registry).
  */
 
 import type { Config } from "jest";
@@ -38,7 +40,13 @@ const config: Config = {
     "!**/index.ts",
     "!**/*.d.ts",
   ],
-  // moduleNameMapper for "@/*" is handled by next/jest via tsconfig paths.
+
+  // next/jest's SWC transform rewrites `@/` in import statements, but
+  // `jest.mock("@/...")` is resolved by Jest's module system. Map the alias
+  // so Item 6 query mocks (and any future path-aliased mocks) resolve on disk.
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/$1",
+  },
 };
 
 export default createJestConfig(config);
