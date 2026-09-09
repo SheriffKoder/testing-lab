@@ -6,7 +6,8 @@
  * Used in: features, views, and tests that need Invoice shapes / status lists.
  * Used for: enforcing FSD public API without pulling next/headers into clients.
  *
- * Server use-cases (listInvoices, …) live in `@/entities/invoice/server`.
+ * Server use-cases (listInvoices, createInvoice, …) live in
+ * `@/entities/invoice/server`.
  */
 
 ///////////////////////////////////////////////////////////////
