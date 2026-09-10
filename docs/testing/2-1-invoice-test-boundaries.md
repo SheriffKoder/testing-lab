@@ -69,7 +69,7 @@ Item 1.
 | Surface | Why | When |
 |---|---|---|
 | Open `/invoices` — heading + table visible | Proves Next route + real page load in a browser | Smoke (Item 2+) |
-| Create invoice E2E: `/invoices` → `/invoices/new` → submit → row on list | Cross-layer hole RTL mocks cannot close (real navigate + persist + refresh) | Later journey item (needs data strategy) |
+| Create invoice E2E: `/invoices` → `/invoices/new` → submit → row on list | Cross-layer hole RTL mocks cannot close (real navigate + persist + refresh) | Item 4 — `tests/e2e/create-invoice.spec.ts` (`tl_playwright_…_${Date.now()}`) |
 | Optional: loading / error recovery in the real browser | Only if unit coverage feels thin for production confidence | Defer |
 
 ---
