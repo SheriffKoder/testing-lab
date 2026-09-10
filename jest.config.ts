@@ -14,6 +14,7 @@
  * 4. Collect coverage from FSD source layers; skip barrels and declaration files.
  * 5. Map `@/` in moduleNameMapper so `jest.mock("@/...")` resolves (SWC alone
  *    rewrites imports, not Jest's mock registry).
+ * 6. Ignore `tests/e2e/` — Playwright owns those specs (`npm run test:e2e`).
  */
 
 import type { Config } from "jest";
@@ -47,6 +48,9 @@ const config: Config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },
+
+  // Playwright specs live under tests/e2e — run only via `npm run test:e2e`.
+  testPathIgnorePatterns: ["<rootDir>/tests/e2e/"],
 };
 
 export default createJestConfig(config);

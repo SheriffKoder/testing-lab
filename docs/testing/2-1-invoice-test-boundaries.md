@@ -70,7 +70,7 @@ Item 1.
 |---|---|---|
 | Open `/invoices` — heading + table visible | Proves Next route + real page load in a browser | Smoke (Item 2+) |
 | Create invoice E2E: `/invoices` → `/invoices/new` → submit → row on list | Cross-layer hole RTL mocks cannot close (real navigate + persist + refresh) | Item 4 — `tests/e2e/create-invoice.spec.ts` (`tl_playwright_…_${Date.now()}`) |
-| Optional: loading / error recovery in the real browser | Only if unit coverage feels thin for production confidence | Defer |
+| Create loading → success + failure → alert + fields kept | Wait on app state (“Saving…”, alert, URL, values) — not `waitForTimeout` | Item 5 — same spec; see [`2-5-playwright-waiting.md`](./2-5-playwright-waiting.md) |
 
 ---
 

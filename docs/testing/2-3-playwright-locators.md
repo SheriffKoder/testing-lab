@@ -5,8 +5,8 @@
 > Builds on [`2-2-playwright-setup.md`](./2-2-playwright-setup.md) and
 > [`2-1-e2e-mental-model.md`](./2-1-e2e-mental-model.md).
 >
-> Next: first create-invoice journey — Item 4 (`2-4-e2e-user-journeys.md` when
-> added).
+> Next: assertions and auto-waiting — Item 5
+> ([`2-5-playwright-waiting.md`](./2-5-playwright-waiting.md)).
 
 Item 2 proved Playwright can open `/invoices`. Item 3 is about **how** tests find
 elements in that browser — and why that choice decides whether tests survive

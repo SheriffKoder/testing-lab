@@ -8,12 +8,17 @@
  *
  * Steps:
  * 1. Set testDir to FSD tests/e2e (not a second root e2e/).
- * 2. baseURL so specs use relative paths like page.goto("/invoices").
- * 3. webServer starts npm run dev and waits for localhost:3000.
+ * 2. baseURL so specs use relative paths like page.goto("/invoices")
+ *    (override with PLAYWRIGHT_BASE_URL when :3000 is taken).
+ * 3. webServer starts npm run dev and waits for that same baseURL.
  * 4. Chromium-only project for Item 2; Firefox/WebKit later if needed.
  */
 
 import { defineConfig, devices } from "@playwright/test";
+
+// Override when port 3000 is already taken by another app, e.g.:
+// PLAYWRIGHT_BASE_URL=http://localhost:3001 npm run test:e2e
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
 
 export default defineConfig({
   // Specs live under the FSD tests/ unit (alongside unit/ and integration/).
@@ -27,7 +32,7 @@ export default defineConfig({
 
   use: {
     // Relative goto("/invoices") resolves here — does not start the server.
-    baseURL: "http://localhost:3000",
+    baseURL,
     // Keep traces light until debugging items; capture on first CI retry.
     trace: "on-first-retry",
   },
@@ -35,7 +40,7 @@ export default defineConfig({
   // Start Next for the suite; reuse a local `next dev` when not on CI.
   webServer: {
     command: "npm run dev",
-    url: "http://localhost:3000",
+    url: baseURL,
     reuseExistingServer: !process.env.CI,
   },
 

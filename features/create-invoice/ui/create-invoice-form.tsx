@@ -11,7 +11,8 @@
  * Steps:
  * 1. Hold controlled string state for each field (status defaults to "draft").
  * 2. On submit: validate; if invalid, set errors with role="alert" and return.
- * 3. If valid: call onSubmit with trimmed customer, Number(amount), status, dueDate.
+ * 3. If valid: await onSubmit; while pending, submit shows “Saving…” and both
+ *    action buttons are disabled (Cancel disabled so the user cannot leave mid-save).
  * 4. Cancel button (type="button") calls onCancel without submitting the form.
  * 5. Shell matches the invoices table: rounded-xl border bg-card shadow-sm.
  */
@@ -65,14 +66,21 @@ export function CreateInvoiceForm({
   const [status, setStatus] = useState<InvoiceStatus>("draft");
   const [dueDate, setDueDate] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
+  /** True while awaiting onSubmit — drives disabled submit + “Saving…” label. */
+  const [isPending, setIsPending] = useState(false);
 
   /**
    * Validate fields, surface alerts, or emit NewInvoiceInput via onSubmit.
    * Uses a real form submit path so Enter / submit-button clicks both work.
    */
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     // 1. Prevent full page reload — this is a client form.
     e.preventDefault();
+
+    // Ignore double-submit while the previous attempt is still in flight.
+    if (isPending) {
+      return;
+    }
 
     // 2. Build an errors map from visible validation rules (never call onSubmit if any fail).
     const nextErrors: FormErrors = {};
@@ -97,14 +105,20 @@ export function CreateInvoiceForm({
       return;
     }
 
-    // 4. Valid → clear errors and emit the parsed payload (amount as number).
+    // 4. Valid → clear errors, show pending UI, await caller (view persists).
     setErrors({});
-    void onSubmit({
-      customer: trimmedCustomer,
-      amount: amountNumber,
-      status,
-      dueDate,
-    });
+    setIsPending(true);
+    try {
+      await onSubmit({
+        customer: trimmedCustomer,
+        amount: amountNumber,
+        status,
+        dueDate,
+      });
+    } finally {
+      // Always clear pending — success navigates away; failure stays on the form.
+      setIsPending(false);
+    }
   }
 
   return (
@@ -192,18 +206,21 @@ export function CreateInvoiceForm({
         ) : null}
       </div>
 
-      {/* Actions — submit is type=submit; cancel is type=button so it never submits */}
+      {/* Actions — submit is type=submit; cancel is type=button so it never submits.
+          Both disabled while pending so the user cannot double-save or leave mid-save. */}
       <div className="flex gap-2">
         <button
           type="submit"
-          className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"
+          disabled={isPending}
+          className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60"
         >
-          Create invoice
+          {isPending ? "Saving…" : "Create invoice"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-md border border-input px-3 py-2 text-sm font-medium"
+          disabled={isPending}
+          className="rounded-md border border-input px-3 py-2 text-sm font-medium disabled:opacity-60"
         >
           Cancel
         </button>

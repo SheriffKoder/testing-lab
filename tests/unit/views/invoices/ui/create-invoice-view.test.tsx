@@ -12,7 +12,7 @@
  * - jest.mock("next/navigation") — fake useRouter push / refresh
  * - jest.mocked / mockResolvedValue / mockRejectedValue / mockReset
  * - userEvent.setup / type / selectOptions / click — drive the real form
- * - waitFor — assert after the async action settles (form voids the Promise)
+ * - waitFor — assert after the async action settles (form awaits onSubmit)
  *
  * Stays real: CreateInvoiceForm validation UI and CreateInvoiceView error alert.
  * Not mocked: formatters, toInvoice, Supabase (action is the cut point here).
@@ -88,8 +88,8 @@ describe("CreateInvoiceView", () => {
     await fillValidForm(user);
     await user.click(screen.getByRole("button", { name: "Create invoice" }));
 
-    // waitFor — form uses `void onSubmit(...)`, so click may finish before the
-    // action Promise settles; retry until navigation assertions pass.
+    // waitFor — form awaits onSubmit; click may finish before the action
+    // Promise settles; retry until navigation assertions pass.
     await waitFor(() => {
       expect(mockedCreateInvoiceAction).toHaveBeenCalledTimes(1);
     });

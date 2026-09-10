@@ -5,6 +5,9 @@
 > Builds on [`2-3-playwright-locators.md`](./2-3-playwright-locators.md) and
 > [`2-1-invoice-test-boundaries.md`](./2-1-invoice-test-boundaries.md)
 > (create invoice = **Both** — this item is the Playwright half).
+>
+> Next: loading / error waits — Item 5
+> ([`2-5-playwright-waiting.md`](./2-5-playwright-waiting.md)).
 
 Item 2–3 proved the app loads and that we can find elements semantically.
 Item 4 protects a **whole workflow**: a real user creating an invoice in a real
@@ -188,9 +191,9 @@ There is no modal to dismiss — assert list URL/heading + new row instead of
 | Locators | Link “Create invoice” → labels → button “Create invoice” → row with customer |
 | Outcome | URL `/invoices` + row visible |
 | Smoke (separate) | `tests/e2e/invoices.spec.ts` — still page-load only |
-| Backend | Real Next + Supabase (no `page.route` yet) |
+| Backend | Real Next + Supabase for success path; Item 5 adds narrow `page.route` delay/abort for loading/error only |
 | RLS prerequisite | `supabase/migrations/0002_tl_invoices_public_insert.sql` — Phase 0 only had SELECT |
-| Not in scope | Validation (RTL), edit/delete, fixtures, network mocks |
+| Not in scope | Validation (RTL), edit/delete, fixtures; full network-mock curriculum is Item 7 |
 
 ### RLS note
 

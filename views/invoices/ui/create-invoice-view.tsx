@@ -10,7 +10,8 @@
  * 1. On cancel → navigate back to /invoices.
  * 2. On valid submit → await createInvoiceAction; on success refresh + push /invoices.
  * 3. On action failure → show a visible role="alert" error; do not navigate.
- * 4. Keep CreateInvoiceForm callback-driven (Item 5 tests unchanged).
+ * 4. Keep CreateInvoiceForm callback-driven — form owns pending/“Saving…” while
+ *    this async handleSubmit (and thus createInvoiceAction) is in flight.
  */
 
 "use client";
