@@ -5,7 +5,8 @@
 > Builds on [`2-5-playwright-waiting.md`](./2-5-playwright-waiting.md) and
 > [`2-6-playwright-test-isolation.md`](./2-6-playwright-test-isolation.md).
 >
-> Next: debugging, test strategy, and Cypress awareness — Item 8.
+> Next: debugging, test strategy, and Cypress awareness — Item 8
+> ([`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md)).
 
 Item 5 used `page.route` narrowly (delay / abort) so loading and create-failure
 could be asserted. Item 7 is the **curriculum**: when to stay on the real

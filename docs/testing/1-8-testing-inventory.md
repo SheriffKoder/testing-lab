@@ -4,6 +4,9 @@
 >
 > Concepts live in [`1-8-testing-strategy.md`](./1-8-testing-strategy.md).
 >
+> Combined Jest / RTL / Playwright map:
+> [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
+>
 > **Coverage is a measurement. Confidence is the goal.**
 > Use this doc to decide what is worth protecting — not to chase a percentage.
 

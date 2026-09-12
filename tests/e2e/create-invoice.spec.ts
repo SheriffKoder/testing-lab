@@ -136,8 +136,12 @@ test.describe("create invoice journey", () => {
 
       await page.getByRole("button", { name: "Create invoice" }).click();
 
-      // CreateInvoiceView catch → role="alert"; do not navigate away.
-      await expect(page.getByRole("alert")).toBeVisible();
+      // CreateInvoiceView catch → <p role="alert">. Next also mounts
+      // #__next-route-announcer__ with role="alert"; filter by text so the
+      // locator is 1:1 (strict mode).
+      await expect(
+        page.getByRole("alert").filter({ hasText: /failed/i }),
+      ).toBeVisible();
       await expect(page).toHaveURL(/\/invoices\/new$/);
 
       // Values retained so the user can fix and retry (not a silent reset).

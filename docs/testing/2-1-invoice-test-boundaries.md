@@ -7,6 +7,9 @@
 > Unit-level Should / Nice / Doesn't need:
 > [`1-8-testing-inventory.md`](./1-8-testing-inventory.md).
 >
+> Combined Jest \| RTL \| Playwright map (after Phase 2):
+> [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
+>
 > **Choose the smallest layer that still gives meaningful confidence.**
 > Do not install Playwright here — this doc only classifies *where* confidence
 > should live.
@@ -73,6 +76,7 @@ Item 1.
 | Create loading → success + failure → alert + fields kept | Wait on app state (“Saving…”, alert, URL, values) — not `waitForTimeout` | Item 5 — same spec; see [`2-5-playwright-waiting.md`](./2-5-playwright-waiting.md) |
 | Each write-path E2E owns a unique `tl_pw_*` customer | Shared table + `fullyParallel` — no “Test 2 assumes Test 1” | Item 6 — `uniqueTlCustomer`; see [`2-6-playwright-test-isolation.md`](./2-6-playwright-test-isolation.md) |
 | Create success stays **real**; create failure is **controlled** (`abort`) | `page.route` sees the action POST only — not RSC `listInvoices` | Item 7 — [`2-7-playwright-network-testing.md`](./2-7-playwright-network-testing.md) |
+| Combined Jest / RTL / Playwright map + debug tools | Layer choice for the next feature; Cypress is docs-only | Item 8 — [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md) |
 
 ---
 

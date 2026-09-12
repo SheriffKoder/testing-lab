@@ -3,6 +3,9 @@
 > Phase 1 · Item 8 · Concepts / explanation.
 >
 > Companion decision table: [`1-8-testing-inventory.md`](./1-8-testing-inventory.md).
+>
+> After Phase 2, which **layer** (Jest / RTL / Playwright) for each invoice
+> behavior: [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
 
 Items 2–7 built a real Jest + RTL suite around invoices: pure helpers, table
 rendering, form interactions, async list states, and offline Create Invoice with
