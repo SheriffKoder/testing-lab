@@ -81,7 +81,7 @@ Finds by visible text content.
 
 ```ts
 page.getByText("No invoices yet");
-page.getByText("tl_playwright_create_invoice"); // later journeys
+page.getByText("tl_pw_create_"); // later journeys (uniqueTlCustomer)
 ```
 
 Good for empty states, confirmations, and unique customer strings. Fragile if
@@ -144,7 +144,7 @@ Narrow a search by combining locators:
 const form = page.getByRole("form"); // if the form has a name / is findable
 await form.getByLabel("Customer").fill("…");
 
-const row = page.getByRole("row").filter({ hasText: "tl_playwright_create_invoice" });
+const row = page.getByRole("row").filter({ hasText: customer });
 await expect(row).toBeVisible();
 ```
 

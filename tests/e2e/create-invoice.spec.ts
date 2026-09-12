@@ -10,14 +10,20 @@
  * - page.route — delay (success) or abort (error) the server-action POST
  *   (narrow Item 5 hook; deep network-mock curriculum is Item 7)
  *
+ * Isolation notes:
+ * - unique tl_pw_ customer per test via uniqueTlCustomer (no shared fixed name)
+ * - does not rely on another spec having run first
+ * - cleanup deferred (unique names are the isolation)
+ *
  * Scope: loading → success + persistence failure → alert + fields kept.
- * Not covered: client validation messages (RTL), fixtures (Item 6), full mocks (Item 7).
+ * Not covered: client validation messages (RTL), teardown janitor, full mocks (Item 7).
  *
  * Used by: `npm run test:e2e` (Playwright, Chromium).
- * Used for: Phase 2 Item 4 journey deepened with Item 5 waiting/error coverage.
+ * Used for: Phase 2 Item 4–5 journey; Item 6 uniqueness via uniqueTlCustomer.
  */
 
 import { test, expect } from "@playwright/test";
+import { uniqueTlCustomer } from "./helpers/unique-tl-customer";
 
 /** True when the browser is posting a Next.js server action for this page. */
 function isServerActionPost(request: { method: () => string; headers: () => Record<string, string> }) {
@@ -28,8 +34,8 @@ function isServerActionPost(request: { method: () => string; headers: () => Reco
 
 test.describe("create invoice journey", () => {
   test("user can create an invoice and see it on the list", async ({ page }) => {
-    // Time suffix keeps re-runs unique without Item 6 fixtures yet.
-    const customer = `tl_playwright_create_invoice_${Date.now()}`;
+    // uniqueTlCustomer — time + random so parallel workers cannot share a name.
+    const customer = uniqueTlCustomer("create");
 
     // Slow the create server-action POST so “Saving…” is visible long enough to assert.
     // Create runs on the server (createInvoiceAction → Supabase); the browser only sees
@@ -89,7 +95,7 @@ test.describe("create invoice journey", () => {
   test("shows an alert and keeps field values when create fails", async ({
     page,
   }) => {
-    const customer = `tl_playwright_create_invoice_error_${Date.now()}`;
+    const customer = uniqueTlCustomer("error");
     const amount = "42.50";
     const dueDate = "2030-01-15";
 

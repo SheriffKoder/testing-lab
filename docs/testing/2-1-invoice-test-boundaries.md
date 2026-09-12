@@ -69,8 +69,9 @@ Item 1.
 | Surface | Why | When |
 |---|---|---|
 | Open `/invoices` — heading + table visible | Proves Next route + real page load in a browser | Smoke (Item 2+) |
-| Create invoice E2E: `/invoices` → `/invoices/new` → submit → row on list | Cross-layer hole RTL mocks cannot close (real navigate + persist + refresh) | Item 4 — `tests/e2e/create-invoice.spec.ts` (`tl_playwright_…_${Date.now()}`) |
+| Create invoice E2E: `/invoices` → `/invoices/new` → submit → row on list | Cross-layer hole RTL mocks cannot close (real navigate + persist + refresh) | Item 4 — `tests/e2e/create-invoice.spec.ts` (`uniqueTlCustomer("create")`) |
 | Create loading → success + failure → alert + fields kept | Wait on app state (“Saving…”, alert, URL, values) — not `waitForTimeout` | Item 5 — same spec; see [`2-5-playwright-waiting.md`](./2-5-playwright-waiting.md) |
+| Each write-path E2E owns a unique `tl_pw_*` customer | Shared table + `fullyParallel` — no “Test 2 assumes Test 1” | Item 6 — `uniqueTlCustomer`; see [`2-6-playwright-test-isolation.md`](./2-6-playwright-test-isolation.md) |
 
 ---
 

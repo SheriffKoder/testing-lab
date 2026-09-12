@@ -5,8 +5,8 @@
 > Builds on [`2-4-e2e-user-journeys.md`](./2-4-e2e-user-journeys.md) and
 > [`2-3-playwright-locators.md`](./2-3-playwright-locators.md).
 >
-> Next: fixtures and isolation — Item 6 (`2-6-playwright-test-isolation.md` when
-> added).
+> Next: fixtures and isolation — Item 6
+> ([`2-6-playwright-test-isolation.md`](./2-6-playwright-test-isolation.md)).
 
 Item 4 proved a create journey can finish. Item 5 is about **how Playwright waits**
 so that journey (and loading/error variants) stay stable when the network or UI
@@ -152,7 +152,7 @@ A **flaky** test sometimes passes and sometimes fails with no product change.
 Typical E2E causes:
 
 - fixed timeouts
-- depending on another test’s data (Item 6)
+- depending on another test’s data ([`2-6-playwright-test-isolation.md`](./2-6-playwright-test-isolation.md))
 - asserting too early
 - selectors that match multiple nodes
 
