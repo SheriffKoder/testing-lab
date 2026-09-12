@@ -5,7 +5,8 @@
 > Builds on [`2-4-e2e-user-journeys.md`](./2-4-e2e-user-journeys.md) and
 > [`2-5-playwright-waiting.md`](./2-5-playwright-waiting.md).
 >
-> Next: network mocking — Item 7.
+> Next: network control — Item 7
+> ([`2-7-playwright-network-testing.md`](./2-7-playwright-network-testing.md)).
 
 Item 4–5 journeys hit a **shared** Supabase table. Item 6 is about making each
 E2E test **own its state** so order, parallelism, and re-runs do not create

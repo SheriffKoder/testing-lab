@@ -179,7 +179,7 @@ There is no modal to dismiss — assert list URL/heading + new row instead of
 - Mutation insert shape with mocked Supabase (unit)
 - Loading button disabled state (Item 5 if needed)
 - Edit / delete (not built)
-- Network failure UI via `page.route` (Item 7)
+- Network failure UI via `page.route` (Item 5 hook; named **controlled** in [`2-7-playwright-network-testing.md`](./2-7-playwright-network-testing.md))
 
 ---
 
@@ -194,7 +194,7 @@ There is no modal to dismiss — assert list URL/heading + new row instead of
 | Smoke (separate) | `tests/e2e/invoices.spec.ts` — still page-load only |
 | Backend | Real Next + Supabase for success path; Item 5 adds narrow `page.route` delay/abort for loading/error only |
 | RLS prerequisite | `supabase/migrations/0002_tl_invoices_public_insert.sql` — Phase 0 only had SELECT |
-| Not in scope | Validation (RTL), edit/delete, teardown janitor; full network-mock curriculum is Item 7 |
+| Not in scope | Validation (RTL), edit/delete, teardown janitor; real vs controlled named in [`2-7-playwright-network-testing.md`](./2-7-playwright-network-testing.md) |
 
 ### RLS note
 

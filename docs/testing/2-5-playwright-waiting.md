@@ -174,7 +174,7 @@ Do **not** wait on `waitForTimeout`.
 
 **Error path:**
 
-1. Create fails (forced failure — narrow `page.route`; full mock curriculum is Item 7)
+1. Create fails (forced failure — narrow `page.route`; named as **controlled** in Item 7 — [`2-7-playwright-network-testing.md`](./2-7-playwright-network-testing.md))
 2. User sees `role="alert"` (on `CreateInvoiceView`)
 3. Form fields still hold what they typed (not silently cleared)
 
