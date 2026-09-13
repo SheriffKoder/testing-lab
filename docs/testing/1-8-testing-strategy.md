@@ -6,6 +6,10 @@
 >
 > After Phase 2, which **layer** (Jest / RTL / Playwright) for each invoice
 > behavior: [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
+>
+> After Phase 3 Item 1, **when** those commands run (local / PR / main / deploy):
+> [`3-1-ci-cd-mental-model.md`](./3-1-ci-cd-mental-model.md) and
+> [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
 
 Items 2–7 built a real Jest + RTL suite around invoices: pure helpers, table
 rendering, form interactions, async list states, and offline Create Invoice with

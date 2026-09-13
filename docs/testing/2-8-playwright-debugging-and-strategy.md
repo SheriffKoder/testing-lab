@@ -11,8 +11,14 @@
 > Layer buckets (Jest+RTL / Playwright / Both / Not worth):
 > [`2-1-invoice-test-boundaries.md`](./2-1-invoice-test-boundaries.md).
 >
-> Next: Phase 2 is complete for this lab. New features reuse the decision rule
-> below — do not start a third inventory.
+> When those layers run (local / PR / main / deploy):
+> [`3-1-ci-cd-mental-model.md`](./3-1-ci-cd-mental-model.md) and
+> [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
+>
+> Next: Phase 3 Item 2 — GitHub Actions fundamentals
+> ([`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md)).
+> New features still reuse the layer decision rule below — do not start a
+> third inventory.
 
 Items 2–7 made Playwright runnable and useful. Item 8 is how you **debug** a
 red E2E, how you **choose a layer** for the next feature, and how Cypress

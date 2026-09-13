@@ -10,6 +10,9 @@
 > Combined Jest \| RTL \| Playwright map (after Phase 2):
 > [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
 >
+> When those commands run (Phase 3):
+> [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
+>
 > **Choose the smallest layer that still gives meaningful confidence.**
 > Do not install Playwright here — this doc only classifies *where* confidence
 > should live.
