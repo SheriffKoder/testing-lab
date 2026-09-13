@@ -11,8 +11,10 @@
 > **Local + PR is the merge gate.** Main re-runs the same CI. Deploy ships
 > the verified build. These are moments, not four extra testing phases.
 >
-> Local CI-like pass: `npm run verify` (script not added yet). First workflow
-> is lint + typecheck — [`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md).
+> Local replica of **today’s** YAML: `npm run ci` (lint + typecheck + test).
+> Full PR sequence `npm run verify` is not added yet. Workflow:
+> [`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md),
+> [`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md).
 
 This table answers a different question than Phase 1–2:
 
@@ -20,8 +22,8 @@ This table answers a different question than Phase 1–2:
 |---|---|
 | What is worth a unit test? Which layer? | When should this **command** run? |
 
-Status: **Exists** = script already in `package.json`. **Item 3+** = still
-to automate. Workflow is **partial** until Items 3–5 (Jest, build, e2e).
+Status: **Exists** = script already in `package.json`. Workflow is
+**partial** until Items 4–5 (`build`, e2e). Jest is in CI (Item 3).
 
 ---
 
@@ -64,7 +66,8 @@ Fast feedback. Can be skipped. Not what unlocks merge.
 |---|---|---|
 | `npm run lint` | Catch style / Next lint errors before the PR | Exists |
 | `npm run typecheck` | Fast `tsc --noEmit` while editing | Exists |
-| `npm test` | Jest + RTL, once, non-watch | Exists |
+| `npm test` | Jest + RTL, once, non-watch | Exists — **CI in Item 3** |
+| `npm run ci` | Local replica of current YAML (lint + typecheck + test) | Exists |
 | `npm run test:watch` | Same suite while iterating — **not** a gate | Exists |
 | `npm run test:e2e` | When you touch invoice journeys | Exists |
 | `npm run test:e2e:headed` / `test:e2e:ui` | Debug a red E2E — watch / scrub | Exists |
@@ -82,17 +85,17 @@ Full validation. Later **required** before merge.
 |---|---|---|
 | `npm run lint` | Agreed lint must not land | Exists — **CI in Item 2** |
 | `npm run typecheck` | Type errors must not land | Exists — **CI in Item 2** |
-| `npm test` | Jest + RTL; non-watch; failed tests fail the job | Exists — CI in Item 3 |
+| `npm test` | Jest + RTL; non-watch; failed tests fail the job | Exists — **CI in Item 3** |
 | `npm run test:e2e` | Playwright journeys (Chromium, `CI=true` retries) | Exists — CI in Item 5 |
 | `npm run build` | Next production compile; catches what tests miss | Exists — CI in Item 4 |
 
-Item 2’s first workflow is **lint + typecheck only**. Do **not** run
-`npm run verify` in that YAML — the script includes Jest, Playwright, and
-`build`, which land in Items 3–5. Those commands stay on this map so they
-are not treated as optional forever.
+The `verify` **job** is lint + typecheck + Jest. Do **not** run
+`npm run verify` in the YAML — that script (not added yet) includes
+Playwright and `build` (Items 4–5). Use `npm run ci` locally for today’s
+gates.
 
-`npm run verify` (local) and the Item 2 **job** named `verify` are different:
-the job is the first slice; the script is the full PR sequence.
+`npm run ci` (local) matches the current job. `npm run verify` (later) is
+the full PR sequence. The job name `verify` is not that script.
 
 ---
 
@@ -168,8 +171,8 @@ for every commit.
 | Soft unit gaps / “Nice” items | Still optional Jest polish — **not** extra CI jobs. |
 | No second integration runner | Jest owns mocked wiring; Playwright owns real persist. |
 
-Item 2 automates **lint + typecheck** only. Naming Jest, build, and e2e here
-is the reminder to add those jobs later — not permission to skip them.
+Item 3 automates **lint + typecheck + Jest**. Naming build and e2e here is
+the reminder to add those jobs later — not permission to skip them.
 
 ---
 

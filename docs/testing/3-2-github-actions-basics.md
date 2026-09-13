@@ -5,8 +5,9 @@
 > Builds on [`3-1-ci-cd-mental-model.md`](./3-1-ci-cd-mental-model.md) and
 > [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
 >
-> Next: Jest in CI — Item 3. The first workflow stays lint + typecheck until
-> then.
+> Next: Jest in CI — Item 3
+> ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md)). That item adds `npm test`
+> to the same `verify` job.
 
 Item 1 decided **what** CI is and **when** each command should run. Item 2
 makes a **tiny** workflow real: checkout, Node, `npm ci`, lint, typecheck.
@@ -165,7 +166,7 @@ direct pushes to `main`.
 
 Leave for later items:
 
-- `npm test` (Item 3)
+- `npm test` — added in Item 3 ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md))
 - coverage upload / thresholds (Item 3 — no arbitrary threshold)
 - job split + `needs` (Item 4)
 - `npm run build` as its own concern (Item 4)
@@ -203,14 +204,15 @@ job (Item 4). Item 2 wants a **fast** type gate.
 | Node | `24.12.0` (exact pin; same as this machine and `.nvmrc`) |
 | Local pin | `.nvmrc` → `24.12.0` |
 | Install | `npm ci` + `cache: npm` |
-| Gates | `npm run lint`, `npm run typecheck` |
+| Gates | `npm run lint`, `npm run typecheck`, `npm test` (Item 3) |
+| Local replica | `npm run ci` (same three commands; not `npm ci`) |
 | Local script | `"typecheck": "tsc --noEmit"` |
-| Not in YAML | Jest, Playwright, `build`, `npm run verify` |
+| Not in YAML | Playwright, `build`, `npm run verify` |
 | Lint fixes for a green first run | `tailwind.config.ts` ESM plugin import; ESLint ignores `coverage/` |
 
-The **job** named `verify` is only lint + typecheck. `npm run verify` (full
-PR sequence) is **not** in `package.json` yet and must **not** be the
-workflow command — it would pull Jest, Playwright, and `build` in too early.
+The **job** named `verify` is now lint + typecheck + Jest. `npm run verify`
+(full PR sequence) is **not** in `package.json` yet and must **not** be the
+workflow command — it would pull Playwright and `build` in too early.
 
 `npm ci` must use the same **npm** that wrote `package-lock.json`. A
 floating `node-version: "24"` can install a newer 24.x (and a newer npm)
@@ -220,16 +222,15 @@ match.
 ### How to read a run
 
 On GitHub: **Actions** tab, or the checks list on a pull request. Open the
-`CI` workflow → `verify` job → a red step (`Lint` vs `Typecheck`) is the
-layer that failed.
+`CI` workflow → `verify` job → a red step (`Lint` vs `Typecheck` vs
+`Test`) is the layer that failed.
 
 The file does nothing until it is on a branch GitHub can see (push / PR).
 
 ### How to run locally (same commands, your machine)
 
 ```bash
-npm run lint
-npm run typecheck
+npm run ci
 ```
 
 ---

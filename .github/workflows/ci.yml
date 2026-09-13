@@ -1,5 +1,5 @@
-# CI — executable policy for lint and types (Phase 3 Item 2).
-# Jest, Playwright, and next build land in later items. Do not run `npm run verify`
+# CI — lint, types, and Jest (Phase 3 Item 3).
+# Playwright and next build land in later items. Do not run `npm run verify`
 # here: that local script is the full PR sequence and would pull those in too early.
 
 name: CI
@@ -30,3 +30,6 @@ jobs:
 
       - name: Typecheck
         run: npm run typecheck
+
+      - name: Test
+        run: npm test

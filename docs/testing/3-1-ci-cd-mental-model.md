@@ -9,6 +9,7 @@
 >
 > Next: GitHub Actions fundamentals — Item 2
 > ([`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md)).
+> Jest in CI — Item 3 ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md)).
 
 Phases 1 and 2 asked: *Does this code behave correctly?*
 
@@ -252,12 +253,16 @@ Commands that already exist:
 | `npm run build` | Next.js production compile |
 
 **Added in Item 2:** `npm run typecheck` (`tsc --noEmit`) and
-`.github/workflows/ci.yml` (job `verify`: `npm ci` → lint → typecheck).
-See [`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md).
+`.github/workflows/ci.yml`. See
+[`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md).
 
-**Still missing:** `npm run verify` (full local PR sequence). Do not call it
-from the first workflow — that would pull Jest, Playwright, and build in
-too early.
+**Added in Item 3:** Test step (`npm test`) on the same `verify` job, and
+`npm run ci` (local replica of lint + typecheck + test). See
+[`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md).
+
+**Still missing:** `npm run verify` (full local PR sequence: also e2e +
+build). Do not call it from the workflow — Playwright and `build` land in
+Items 4–5.
 
 **Not a CI gate:** `npm run dev`, `npm start`, `test:watch`,
 `test:e2e:headed`, `test:e2e:ui`.
