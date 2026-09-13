@@ -17,7 +17,7 @@ describe("test environment", () => {
   // it — one test case; alias of test(). Failures name this string in the output.
   it("runs and evaluates assertions", () => {
     // expect(...).toBe(...) — strict equality matcher (===) for primitives.
-    expect(1 + 1).toBe(3);
+    expect(1 + 1).toBe(2);
   });
 
   it("has a jsdom document available", () => {
