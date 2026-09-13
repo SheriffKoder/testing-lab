@@ -10,6 +10,8 @@
 > Next: GitHub Actions fundamentals — Item 2
 > ([`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md)).
 > Jest in CI — Item 3 ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md)).
+> Jobs and `next build` — Item 4
+> ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)).
 
 Phases 1 and 2 asked: *Does this code behave correctly?*
 
@@ -256,13 +258,15 @@ Commands that already exist:
 `.github/workflows/ci.yml`. See
 [`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md).
 
-**Added in Item 3:** Test step (`npm test`) on the same `verify` job, and
-`npm run ci` (local replica of lint + typecheck + test). See
+**Added in Item 3:** Test step (`npm test`) and `npm run ci`. See
 [`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md).
 
-**Still missing:** `npm run verify` (full local PR sequence: also e2e +
-build). Do not call it from the workflow — Playwright and `build` land in
-Items 4–5.
+**Added in Item 4:** three jobs (`quality` / `tests` / `build`),
+`npm run build` as a gate, and `npm run ci` now includes build. See
+[`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md).
+
+**Still missing:** `npm run verify` (full local PR sequence: also e2e).
+Do not call it from the workflow — Playwright lands in Item 5.
 
 **Not a CI gate:** `npm run dev`, `npm start`, `test:watch`,
 `test:e2e:headed`, `test:e2e:ui`.

@@ -1,6 +1,10 @@
-# CI — lint, types, and Jest (Phase 3 Item 3).
-# Playwright and next build land in later items. Do not run `npm run verify`
-# here: that local script is the full PR sequence and would pull those in too early.
+# CI — quality, tests, and build (Phase 3 Item 4).
+# Playwright lands in Item 5. Do not run `npm run verify`
+# here: that local script is the full PR sequence and would pull e2e in too early.
+#
+# Three jobs, no `needs`: they start in parallel so a lint fail and a test
+# fail can both show. Each runner is clean, so each job repeats npm ci.
+# `cache: npm` keys off the lockfile and does not change what is installed.
 
 name: CI
 
@@ -10,7 +14,7 @@ on:
     branches: [main]
 
 jobs:
-  verify:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,5 +35,38 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24.12.0"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Test
         run: npm test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24.12.0"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build

@@ -6,8 +6,9 @@
 > [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
 >
 > Next: Jest in CI — Item 3
-> ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md)). That item adds `npm test`
-> to the same `verify` job.
+> ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md)). Jobs, cache, and
+> `npm run build` — Item 4
+> ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)).
 
 Item 1 decided **what** CI is and **when** each command should run. Item 2
 makes a **tiny** workflow real: checkout, Node, `npm ci`, lint, typecheck.
@@ -168,8 +169,9 @@ Leave for later items:
 
 - `npm test` — added in Item 3 ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md))
 - coverage upload / thresholds (Item 3 — no arbitrary threshold)
-- job split + `needs` (Item 4)
-- `npm run build` as its own concern (Item 4)
+- job split + `npm run build` — added in Item 4
+  ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md));
+  no `needs` yet
 - Playwright browsers + artifacts (Item 5)
 - Secrets (Item 6)
 - Husky / branch protection (Item 7)
@@ -199,20 +201,21 @@ job (Item 4). Item 2 wants a **fast** type gate.
 | Workflow | `.github/workflows/ci.yml` |
 | Name | `CI` |
 | Triggers | `pull_request`; `push` to `main` |
-| Job | `verify` on `ubuntu-latest` |
+| Jobs | `quality`, `tests`, `build` on `ubuntu-latest` (no `needs`) |
 | Actions | `actions/checkout@v7`, `actions/setup-node@v7` |
 | Node | `24.12.0` (exact pin; same as this machine and `.nvmrc`) |
 | Local pin | `.nvmrc` → `24.12.0` |
-| Install | `npm ci` + `cache: npm` |
-| Gates | `npm run lint`, `npm run typecheck`, `npm test` (Item 3) |
-| Local replica | `npm run ci` (same three commands; not `npm ci`) |
+| Install | `npm ci` + `cache: npm` (each job) |
+| Gates | lint + typecheck / `npm test` / `npm run build` (Items 2–4) |
+| Local replica | `npm run ci` (same four commands, serial; not `npm ci`) |
 | Local script | `"typecheck": "tsc --noEmit"` |
-| Not in YAML | Playwright, `build`, `npm run verify` |
+| Not in YAML | Playwright, `npm run verify` |
 | Lint fixes for a green first run | `tailwind.config.ts` ESM plugin import; ESLint ignores `coverage/` |
 
-The **job** named `verify` is now lint + typecheck + Jest. `npm run verify`
-(full PR sequence) is **not** in `package.json` yet and must **not** be the
-workflow command — it would pull Playwright and `build` in too early.
+The workflow is now three jobs: `quality` (lint + typecheck), `tests`
+(Jest), `build` (`next build`). `npm run verify` (full PR sequence) is
+**not** in `package.json` yet and must **not** be the workflow command —
+it would pull Playwright in too early.
 
 `npm ci` must use the same **npm** that wrote `package-lock.json`. A
 floating `node-version: "24"` can install a newer 24.x (and a newer npm)
@@ -222,8 +225,9 @@ match.
 ### How to read a run
 
 On GitHub: **Actions** tab, or the checks list on a pull request. Open the
-`CI` workflow → `verify` job → a red step (`Lint` vs `Typecheck` vs
-`Test`) is the layer that failed.
+`CI` workflow → a red **job** (`quality` vs `tests` vs `build`) is the
+layer. Inside `quality`, a red step (`Lint` vs `Typecheck`) is the
+command.
 
 The file does nothing until it is on a branch GitHub can see (push / PR).
 

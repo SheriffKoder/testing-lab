@@ -150,35 +150,38 @@ because browsers are racy. Jest + jsdom should almost never need
 
 | Piece | Value |
 |---|---|
-| Workflow | `.github/workflows/ci.yml` — still one job, `verify` |
+| Workflow | `.github/workflows/ci.yml` — Jest lives in the `tests` job (Item 4 split) |
 | Node | `24.12.0` (`.nvmrc` + `setup-node`) |
-| New step | **Test** → `npm test` (`jest`, non-watch) |
-| Local replica | `npm run ci` → lint + typecheck + test |
+| Test command | `npm test` (`jest`, non-watch) |
+| Local replica | `npm run ci` → lint + typecheck + test + build |
 | Jest config | `jest.config.ts` ignores `tests/e2e/` |
 | Coverage % gate | **None** |
-| Not in YAML | `test:watch`, Playwright, `build`, `npm run verify` |
+| Not in YAML | `test:watch`, Playwright, `npm run verify` |
 
-Job order:
+Item 3 added the Test step on a single `verify` job. Item 4 moved Jest
+into its own `tests` job (see
+[`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)):
 
 ```text
-checkout → setup-node → npm ci → lint → typecheck → test
+tests: checkout → setup-node → npm ci → test
 ```
 
-`npm run ci` matches that command list on your machine. It is **not**
-`npm ci` (the lockfile install).
+`npm run ci` matches today’s command list on your machine (including
+build). It is **not** `npm ci` (the lockfile install).
 
-`npm run verify` (full PR sequence: also e2e + build) is still **not**
+`npm run verify` (full PR sequence: also e2e) is still **not**
 in `package.json` and must **not** be the workflow command.
 
 ### How to read a run
 
-On GitHub: **Actions** tab, or the PR checks list → `CI` → `verify`.
+On GitHub: **Actions** tab, or the PR checks list → `CI` → `tests`.
 
-| Red step | Layer |
+| Red job / step | Layer |
 |---|---|
-| Lint | ESLint |
-| Typecheck | `tsc --noEmit` |
-| Test | Jest + RTL |
+| `quality` / Lint | ESLint |
+| `quality` / Typecheck | `tsc --noEmit` |
+| `tests` / Test | Jest + RTL |
+| `build` / Build | `next build` |
 
 A Test failure is Jest output (suite name, assertion), not an ESLint
 filename list.
@@ -189,8 +192,8 @@ filename list.
 npm run ci
 ```
 
-Same three gates as the YAML. CI still starts from `npm ci` on a clean
-runner.
+Same four commands as today’s YAML, serial on your machine. CI still
+starts each job from `npm ci` on a clean runner.
 
 ---
 
