@@ -93,7 +93,7 @@ Typical start of a Node workflow:
 - uses: actions/checkout@v7
 - uses: actions/setup-node@v7
   with:
-    node-version: "20"
+    node-version: "24"
     cache: npm
 - run: npm ci
 - run: npm run lint
@@ -200,7 +200,7 @@ job (Item 4). Item 2 wants a **fast** type gate.
 | Triggers | `pull_request`; `push` to `main` |
 | Job | `verify` on `ubuntu-latest` |
 | Actions | `actions/checkout@v7`, `actions/setup-node@v7` |
-| Node | `20` (matches `@types/node`) |
+| Node | `24` (matches this machine; ships npm 11, same major that wrote the lockfile) |
 | Install | `npm ci` + `cache: npm` |
 | Gates | `npm run lint`, `npm run typecheck` |
 | Local script | `"typecheck": "tsc --noEmit"` |
@@ -210,6 +210,10 @@ job (Item 4). Item 2 wants a **fast** type gate.
 The **job** named `verify` is only lint + typecheck. `npm run verify` (full
 PR sequence) is **not** in `package.json` yet and must **not** be the
 workflow command — it would pull Jest, Playwright, and `build` in too early.
+
+`npm ci` must use the same **npm major** that wrote `package-lock.json`.
+npm 11 (Node 24) and npm 10 (Node 20) disagree on optional `@emnapi/*`
+entries; a lockfile from one can fail `npm ci` on the other.
 
 ### How to read a run
 
