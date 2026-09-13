@@ -11,9 +11,8 @@
 > **Local + PR is the merge gate.** Main re-runs the same CI. Deploy ships
 > the verified build. These are moments, not four extra testing phases.
 >
-> Local CI-like pass: `npm run verify` (Item 2). Do not create GitHub Actions
-> here — Item 2 adds the first workflow
-> ([`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md)).
+> Local CI-like pass: `npm run verify` (script not added yet). First workflow
+> is lint + typecheck — [`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md).
 
 This table answers a different question than Phase 1–2:
 
@@ -21,8 +20,8 @@ This table answers a different question than Phase 1–2:
 |---|---|
 | What is worth a unit test? Which layer? | When should this **command** run? |
 
-Status: **Exists** = script already in `package.json`. **Item 2+** = add or
-automate later. No new scripts in this item.
+Status: **Exists** = script already in `package.json`. **Item 3+** = still
+to automate. Workflow is **partial** until Items 3–5 (Jest, build, e2e).
 
 ---
 
@@ -64,13 +63,13 @@ Fast feedback. Can be skipped. Not what unlocks merge.
 | Command | Why | Status |
 |---|---|---|
 | `npm run lint` | Catch style / Next lint errors before the PR | Exists |
-| `npm run typecheck` | Fast `tsc --noEmit` while editing | **Add in Item 2** |
+| `npm run typecheck` | Fast `tsc --noEmit` while editing | Exists |
 | `npm test` | Jest + RTL, once, non-watch | Exists |
 | `npm run test:watch` | Same suite while iterating — **not** a gate | Exists |
 | `npm run test:e2e` | When you touch invoice journeys | Exists |
 | `npm run test:e2e:headed` / `test:e2e:ui` | Debug a red E2E — watch / scrub | Exists |
 | `npm run test:coverage` | Spotlight uncovered files (Phase 1) — no threshold | Exists |
-| `npm run verify` | Optional CI-like pass before push (full PR sequence) | **Add in Item 2** (needs `typecheck`) |
+| `npm run verify` | Optional CI-like pass before push (full PR sequence) | Not added — do not confuse with the CI **job** `verify` |
 | Husky pre-commit (lint staged files) | Remind before commit; still bypassable | Item 7 — do not install now |
 
 ---
@@ -82,7 +81,7 @@ Full validation. Later **required** before merge.
 | Command | Why | Status |
 |---|---|---|
 | `npm run lint` | Agreed lint must not land | Exists — **CI in Item 2** |
-| `npm run typecheck` | Type errors must not land | **Add script + CI in Item 2** |
+| `npm run typecheck` | Type errors must not land | Exists — **CI in Item 2** |
 | `npm test` | Jest + RTL; non-watch; failed tests fail the job | Exists — CI in Item 3 |
 | `npm run test:e2e` | Playwright journeys (Chromium, `CI=true` retries) | Exists — CI in Item 5 |
 | `npm run build` | Next production compile; catches what tests miss | Exists — CI in Item 4 |

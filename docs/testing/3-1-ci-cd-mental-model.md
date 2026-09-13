@@ -251,18 +251,19 @@ Commands that already exist:
 | `npm run test:e2e` | Playwright Chromium; `CI=true` already sets retries / no server reuse |
 | `npm run build` | Next.js production compile |
 
-**Missing today:** `typecheck` (`tsc --noEmit`) and `verify` (lint &&
-typecheck && test && test:e2e && build). `tsconfig.json` already has
-`"noEmit": true`. Item 2 **adds** both scripts and runs lint + typecheck in
-CI. Do not call `npm run verify` in the first workflow — that would pull
-Jest, Playwright, and build in too early.
+**Added in Item 2:** `npm run typecheck` (`tsc --noEmit`) and
+`.github/workflows/ci.yml` (job `verify`: `npm ci` → lint → typecheck).
+See [`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md).
+
+**Still missing:** `npm run verify` (full local PR sequence). Do not call it
+from the first workflow — that would pull Jest, Playwright, and build in
+too early.
 
 **Not a CI gate:** `npm run dev`, `npm start`, `test:watch`,
 `test:e2e:headed`, `test:e2e:ui`.
 
-**Not created in this item:** `.github/workflows/` (none yet), Husky, a new
-`.env.example` (one already exists — Item 6 reviews secrets; do not expand it
-here).
+**Later:** Husky (Item 7). `.env.example` already exists — Item 6 reviews
+secrets; do not expand it here.
 
 Layer choice still lives in
 [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
