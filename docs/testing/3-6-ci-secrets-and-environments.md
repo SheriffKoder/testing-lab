@@ -105,11 +105,11 @@ use them. This lab does **not**.
 |---|---|
 | **Development** | Laptop: `.env`, `next dev`, Playwright `webServer` |
 | **CI** | GitHub runner: Actions secrets, `npm ci`, e2e against this lab’s Supabase |
-| **Preview** | Host deploy of a PR (Vercel). Item 8. |
-| **Production** | Host deploy of `main`. Item 8. |
+| **Preview** | Host deploy of a PR (Vercel when connected). See [`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md). |
+| **Production** | Host deploy of `main` (Vercel when connected). Same doc. |
 
 This item documents the map. It does not require creating GitHub
-Environments. Item 8 uses the host’s env.
+Environments. Host env lives on Vercel when the project is linked.
 
 ---
 
@@ -133,7 +133,7 @@ Give CI the **smallest** credential that makes the check true.
 | lint / typecheck / Jest | None (mocks) |
 | `next build` (this app) | None today (Suspense shell compiles without env) |
 | Playwright | Publishable URL + key (real `tl_invoices`) |
-| Deploy (Item 8) | Host token or the host’s own env — still no service role in the browser |
+| Deploy (host) | Host’s own env (Vercel Preview / Production) — still no service role in the browser; no Actions deploy token in this lab |
 
 A service-role key bypasses RLS. It must never appear in
 `NEXT_PUBLIC_*`, client code, or Playwright.
@@ -158,7 +158,7 @@ error on CI means “env not wired,” not “Supabase is down.”
 ```text
 Local       .env (gitignored)                 names from .env.example
 CI          GitHub Actions secrets            same names, no file
-Production  host env (Vercel, etc.)           same names; Item 8
+Production  host env (Vercel when connected)   same names; [`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md)
 ```
 
 Same **names** everywhere. Different **stores**. Never the same
@@ -171,7 +171,9 @@ privileged key in the browser.
 - Playwright job itself (Item 5)
 - Husky / branch protection — Item 7
   ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md))
-- Vercel project wiring (Item 8)
+- Vercel project wiring — documented in Item 8
+  ([`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md)); host may still
+  be disconnected
 - Adding a service-role key “for completeness”
 - Committing `.env`
 - A new CI job or gate
@@ -190,7 +192,7 @@ privileged key in the browser.
 | Jobs that do not | `quality`, `tests`, `build` |
 | Required names | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` |
 | Not in the app | service-role key; starter `ENABLE_DEMO_LOGIN` / `DEMO_*` (removed from `.env.example`) |
-| Host / production | Item 8 |
+| Host / production | Vercel when connected — same two names; see [`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md) |
 
 ```text
 Local     .env                          NEXT_PUBLIC_SUPABASE_URL
@@ -201,7 +203,8 @@ CI e2e    secrets.NEXT_PUBLIC_SUPABASE_URL
 
 quality / tests / build    (none)
 
-Production    host env, Item 8          same two names
+Production    Vercel env (deferred)     same two names
+                                          see 3-8-ci-cd-strategy.md
 ```
 
 Playwright also reads `PLAYWRIGHT_BASE_URL` (optional local override;

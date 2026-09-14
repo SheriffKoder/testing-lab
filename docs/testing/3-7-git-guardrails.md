@@ -4,7 +4,8 @@
 >
 > Builds on [`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md).
 >
-> Next: deploy and the full CI/CD strategy — Item 8.
+> Next: deploy and the full CI/CD strategy — Item 8
+> ([`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md)).
 
 Items 2–6 made lint, types, Jest, Playwright, and build run on every
 PR, with secrets out of git. Item 7 connects that pipeline to **how

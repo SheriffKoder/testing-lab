@@ -18,6 +18,8 @@
 > ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
 > Husky and branch protection — Item 7
 > ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md)).
+> Deploy / CI/CD strategy — Item 8
+> ([`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md)).
 
 Phases 1 and 2 asked: *Does this code behave correctly?*
 
@@ -286,6 +288,12 @@ staged `*.{js,jsx,ts,tsx}`). `npm run verify` is still not a hook.
 Branch protection is Settings (classic rule on `main`; require the
 four job names). See
 [`3-7-git-guardrails.md`](./3-7-git-guardrails.md).
+
+**Added in Item 8:** document that Actions **verifies** and the host
+(**Vercel**) **ships** — no deploy job in `ci.yml`, no
+`VERCEL_TOKEN`. Host connection deferred; production remains gated
+by merge. See
+[`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md).
 
 **Not a CI gate:** `npm run dev`, `npm start`, `test:watch`,
 `test:e2e:headed`, `test:e2e:ui`. Item 6 is a secrets review, not a

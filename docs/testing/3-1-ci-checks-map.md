@@ -19,7 +19,8 @@
 > [`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md),
 > [`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md),
 > [`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md),
-> [`3-7-git-guardrails.md`](./3-7-git-guardrails.md).
+> [`3-7-git-guardrails.md`](./3-7-git-guardrails.md),
+> [`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md).
 
 This table answers a different question than Phase 1–2:
 
@@ -117,7 +118,7 @@ Same as the PR. Do not run fewer gates on `main`.
 | Command | Why | Status |
 |---|---|---|
 | Lint, typecheck, Jest, Playwright, build | Prove what actually landed, not only the PR head | Same as PR (Items 2–5) |
-| Deploy trigger | After green CI — host or Actions | Item 8 |
+| Deploy trigger | After green CI + merge — Vercel when connected (no Actions deploy job) | Item 8 — host deferred; map in [`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md) |
 
 `push` to `main` is why the workflow will listen to `main` as well as
 `pull_request`. Direct pushes should not skip the gate.
@@ -130,11 +131,12 @@ Shipping, not a new test runner.
 
 | Command | Why | Status |
 |---|---|---|
-| `npm run build` | Host must compile the app | Exists — host + Item 4 CI |
+| `npm run build` | Host must compile the app | Exists in CI (Item 4); host compile when Vercel is connected |
 | Playwright against the **deployed** URL | Optional later; not this lab’s setup | **Skip** — E2E uses `webServer` + Supabase |
 
-Preview deploys (per PR) may run in parallel with CI. They do **not**
-replace the PR gate.
+Preview deploys (per PR) may run in parallel with CI when the host
+is connected. They do **not** replace the PR gate. See
+[`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md).
 
 ---
 
