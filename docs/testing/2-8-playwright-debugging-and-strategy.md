@@ -11,8 +11,14 @@
 > Layer buckets (Jest+RTL / Playwright / Both / Not worth):
 > [`2-1-invoice-test-boundaries.md`](./2-1-invoice-test-boundaries.md).
 >
-> Next: Phase 2 is complete for this lab. New features reuse the decision rule
-> below — do not start a third inventory.
+> When those layers run (local / PR / main / deploy):
+> [`3-1-ci-cd-mental-model.md`](./3-1-ci-cd-mental-model.md) and
+> [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
+>
+> Next: Phase 3 Item 2 — GitHub Actions fundamentals
+> ([`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md)).
+> New features still reuse the layer decision rule below — do not start a
+> third inventory.
 
 Items 2–7 made Playwright runnable and useful. Item 8 is how you **debug** a
 red E2E, how you **choose a layer** for the next feature, and how Cypress
@@ -56,12 +62,18 @@ This repo’s default is `trace: "on-first-retry"`. A zip appears when a test
 **fails and then retries**. Locally `retries: 0`, so a fail does **not** write
 a zip unless you pass `--trace on` (then you get a zip for pass **or** fail).
 
-On CI (when a workflow exists), `CI=true` sets `retries: 2`. The first retry
-writes `test-results/.../trace.zip` on the runner. Open that file locally with
-`show-trace`. This lab has **no** `.github/workflows/` yet — the config is
-ready; nothing uploads artifacts today.
+On CI, `CI=true` sets `retries: 2`. The first retry writes
+`test-results/.../trace.zip` on the runner. The **e2e** job uploads
+`playwright-report/` and `test-results/` when that job **fails** —
+download the artifact from the Actions run, then open
+`playwright-report/index.html` (suite report) or
+`npx playwright show-trace` on a `trace.zip`. See
+[`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md).
 
-`test-results/` is gitignored. Delete it after you have looked.
+`test-results/` is gitignored. Locally each run is
+`test-results/<timestamp>/` so history is kept. On CI the folder is
+flat (the Actions run is the version). Delete old stamps when you no
+longer need them.
 
 ### Screenshots and videos
 
@@ -229,9 +241,11 @@ write Playwright here.
 |---|---|
 | Scripts | `test:e2e`, `test:e2e:headed`, `test:e2e:ui` |
 | Local retries | `0` — fail once, read the log |
-| CI retries | `2` when `CI=true` (GitHub Actions would set this; no workflow file yet) |
+| CI retries | `2` when `CI=true` (GitHub Actions sets this on the runner) |
 | Trace default | `on-first-retry` — zip on the first **retry**, not every fail |
-| Local zip | Pass `--trace on`; file lands in `test-results/` (gitignored) |
+| CI artifact | `e2e` job uploads `playwright-report/index.html` + `test-results/` on failure (7 days; not a git commit) |
+| HTML report | `reporter: [["list"], ["html"]]` — local: `playwright-report/<timestamp>/`; CI: `playwright-report/`. `npx playwright show-report <folder>` |
+| Local zip | Pass `--trace on`; file lands in `test-results/<timestamp>/` (gitignored; same stamp as the HTML report) |
 | Port | `PLAYWRIGHT_BASE_URL=http://localhost:3001` when `:3000` is another app |
 | Browsers | `PLAYWRIGHT_BROWSERS_PATH=$HOME/Library/Caches/ms-playwright` if headed cannot find Chromium |
 | Cypress | **Not** installed |

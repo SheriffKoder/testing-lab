@@ -6,6 +6,12 @@
 >
 > After Phase 2, which **layer** (Jest / RTL / Playwright) for each invoice
 > behavior: [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
+>
+> After Phase 3 Item 1, **when** those commands run (local / PR / main / deploy):
+> [`3-1-ci-cd-mental-model.md`](./3-1-ci-cd-mental-model.md) and
+> [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
+> Full Phase 3 automation table:
+> [`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md).
 
 Items 2–7 built a real Jest + RTL suite around invoices: pure helpers, table
 rendering, form interactions, async list states, and offline Create Invoice with
@@ -247,6 +253,30 @@ branch gaps are documented in the inventory.
 - Are 0% mocked modules (`listInvoices`, `createInvoiceAction`) always holes?
   **No** — often intentional mock boundaries.
 - Ship gate = percentage? **No** — inventory decisions + green contracts.
+
+---
+
+## Automation (Phase 3)
+
+Coverage asks *what is worth a unit test.* Phase 3 asks *when
+automation runs*. Details:
+[`3-8-ci-cd-strategy.md`](./3-8-ci-cd-strategy.md),
+[`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
+
+| Concern | Local | CI | Deployment |
+|---|---|---|---|
+| Lint | Hook + `npm run lint` | `quality` | No |
+| Typecheck | `npm run typecheck` | `quality` | No |
+| Jest / RTL | `npm test` | `tests` | No |
+| Playwright | When needed | `e2e` | No (not prod URL) |
+| `next build` | Sometimes | `build` | Host (when connected) |
+| Full PR sequence | `npm run verify` (opt-in) | Four jobs | No |
+| Coverage % | Spotlight only | **Not** a gate | No |
+| Ship URL | No | No | Vercel planned; not required for this doc |
+
+Merge to `main` requires `quality`, `tests`, `build`, `e2e`
+([`3-7-git-guardrails.md`](./3-7-git-guardrails.md)). There is **no**
+Actions deploy job.
 
 ---
 

@@ -20,6 +20,17 @@ import { defineConfig, devices } from "@playwright/test";
 // PLAYWRIGHT_BASE_URL=http://localhost:3001 npm run test:e2e
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
 
+// Local: one folder per run so reports and traces are not overwritten.
+// CI: flat dirs — GitHub already versions the artifact by run.
+const runStamp = new Date().toISOString().replace(/[:.]/g, "-");
+const htmlReportDir = process.env.CI
+  ? "playwright-report"
+  : `playwright-report/${runStamp}`;
+const testResultsDir = process.env.CI
+  ? "test-results"
+  : `test-results/${runStamp}`;
+// Open a saved local report: npx playwright show-report playwright-report/<stamp>
+
 export default defineConfig({
   // Specs live under the FSD tests/ unit (alongside unit/ and integration/).
   testDir: "./tests/e2e",
@@ -29,6 +40,12 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   // Local: fail fast. CI: retry flaky network/timing once or twice.
   retries: process.env.CI ? 2 : 0,
+
+  // list = terminal. html writes htmlReportDir (gitignored). Never
+  // auto-open: CI has no display; locally pass the stamped folder to
+  // `npx playwright show-report`.
+  reporter: [["list"], ["html", { open: "never", outputFolder: htmlReportDir }]],
+  outputDir: testResultsDir,
 
   use: {
     // Relative goto("/invoices") resolves here — does not start the server.

@@ -7,6 +7,9 @@
 > Combined Jest / RTL / Playwright map:
 > [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
 >
+> When those commands run (CI/CD moments):
+> [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
+>
 > **Coverage is a measurement. Confidence is the goal.**
 > Use this doc to decide what is worth protecting — not to chase a percentage.
 
