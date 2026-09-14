@@ -237,10 +237,10 @@ merge to main
 | lint-staged | `*.{js,jsx,ts,tsx}` → `eslint` (no `--fix`) |
 | Not a hook | `npm test`, `test:e2e`, `build`, `verify`, no `pre-push` |
 | Workflow | unchanged — still four jobs, no `needs` |
-| Required checks (intended) | `quality`, `tests`, `build`, `e2e` |
-| Protection | GitHub **Settings → Branches** classic rule on `main` |
+| Required checks | `quality`, `tests`, `build`, `e2e` (**required**) |
+| Protection | Classic rule on `main` — **enforced** (repo is public) |
 | Reviews | 0 required approvals; no `CODEOWNERS` |
-| Bypass | `git commit --no-verify` skips Husky; CI still runs |
+| Bypass | `git commit --no-verify` skips Husky; CI still runs; admins cannot bypass the rule |
 
 ```text
 prepare (npm install / npm ci)
@@ -261,21 +261,22 @@ Jest is still the `tests` job, not pre-commit.
 ### Branch protection (Settings, not git)
 
 Owner path: **Settings → Branches → Add classic branch protection
-rule** (not “Add branch ruleset” for this lab).
+rule**. Rulesets on a personal Free **private** repo stay “not
+enforced” until Team/Pro; this lab made the repo **public** so
+classic protection applies.
 
-| Knob | This lab |
+| Knob | This lab (live) |
 |---|---|
 | Pattern | `main` |
 | Require a pull request | On |
 | Required approvals | **0** |
 | Require status checks | `quality`, `tests`, `build`, `e2e` |
-| Do not allow bypassing / include administrators | On |
+| Enforce admins / no bypass | On |
 | CODEOWNERS / conversation resolution | Off |
+| Strict “up to date” | Off |
 
-This repository is **private** on GitHub Free. Classic protection
-(and the protection API) may require **public** or **Pro**. YAML
-cannot compensate. If the rule does not save, the four jobs stay
-**informational** — a red `e2e` does not block merge.
+A red required check blocks merge. Direct `git push origin main` is
+rejected in the normal path.
 
 ### How to tell hook fail from CI fail
 
