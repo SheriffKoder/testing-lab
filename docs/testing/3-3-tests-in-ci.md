@@ -9,6 +9,8 @@
 > ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)).
 > Playwright in CI — Item 5
 > ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)).
+> Secrets and env — Item 6
+> ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
 
 Item 2 made lint and types unavoidable. Item 3 does the same for **Jest +
 RTL** (unit and mocked-wiring tests). Playwright is a separate job in
@@ -101,11 +103,12 @@ Still not identical to a laptop:
 - OS is Linux on `ubuntu-latest`
 - no leftover `node_modules`
 - env files: next/jest loads `.env*` from the repo; **secrets** are
-  Item 6
+  Item 6 ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md))
 - `jest.config.ts` maps `@/` so `jest.mock("@/...")` resolves
 
 If a test needs a privileged key or a running Next server, it does not
-belong in this job. That is Playwright or Item 6.
+belong in this job. That is Playwright
+([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)).
 
 ---
 

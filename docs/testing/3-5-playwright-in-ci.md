@@ -5,13 +5,13 @@
 > Builds on [`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)
 > and [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
 >
-> Next: secrets, env, and environments — Item 6. That item reviews every
-> variable. This item only wires the two values the journeys need.
+> Next: secrets, env, and environments — Item 6
+> ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
 
 Items 2–4 made lint, types, Jest, and `next build` unavoidable on a clean
 runner. Item 5 does the same for **Playwright**. Secrets get a full
-review in Item 6; this item only wires the env the journeys actually
-need.
+review in [`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md);
+this item only wires the env the journeys actually need.
 
 The phase goal:
 
@@ -203,8 +203,8 @@ values, but they are still **project-specific**. Do not paste them into
 YAML.
 
 This item: pass them into the **e2e** job from GitHub Actions
-secrets or variables (`env:`). Item 6 reviews every variable, updates
-`.env.example`, and documents Local / CI / Production.
+secrets (`env:`). The full names × Local / CI / Production map is
+[`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md).
 
 No privileged service-role key. No secrets in the workflow file.
 
@@ -212,7 +212,8 @@ No privileged service-role key. No secrets in the workflow file.
 
 ## What this item does **not** do
 
-- Full secrets / environments write-up (Item 6)
+- Full secrets / environments write-up — Item 6
+  ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md))
 - Required checks / Husky (Item 7)
 - Deploy on green (Item 8)
 - Firefox / WebKit
@@ -239,7 +240,7 @@ not hook it to YAML or pre-commit.
 | Command | `npm run test:e2e` (`playwright test`) |
 | Config | `playwright.config.ts` — `retries: 2`, `forbidOnly`, no server reuse, `trace: on-first-retry` when `CI=true`; `reporter: list` + `html` |
 | Artifact | `playwright-report/` (`index.html`) + `test-results/` on **failure**; `actions/upload-artifact@v7`; 7 days |
-| Env | both from repository `secrets` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) — not `.env` on the runner |
+| Env | both from repository `secrets` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) — not `.env` on the runner; map in [`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md) |
 | Local replica | `npm run ci` → lint + typecheck + test + test:e2e + build (serial) |
 | Local full sequence | `npm run verify` — same command list; **not** a workflow command |
 | Not in YAML | `npm run verify`, `test:e2e:headed`, `test:e2e:ui` |

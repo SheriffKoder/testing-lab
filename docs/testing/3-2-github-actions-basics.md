@@ -11,6 +11,8 @@
 > ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)).
 > Playwright in CI — Item 5
 > ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)).
+> Secrets and env — Item 6
+> ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
 
 Item 1 decided **what** CI is and **when** each command should run. Item 2
 makes a **tiny** workflow real: checkout, Node, `npm ci`, lint, typecheck.
@@ -176,7 +178,8 @@ Leave for later items:
   no `needs` yet
 - Playwright browsers + artifacts — added in Item 5
   ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md))
-- Secrets (Item 6)
+- Secrets — Item 6
+  ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md))
 - Husky / branch protection (Item 7)
 - Deploy (Item 8)
 

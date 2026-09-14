@@ -6,7 +6,7 @@
 # e2e fail can both show. Each runner is clean, so each job repeats npm ci.
 # The e2e job also installs Chromium. `cache: npm` keys off the lockfile
 # and does not change what is installed. Supabase env is on the e2e job
-# only (Item 6 reviews secrets more fully).
+# only (Item 6 documents the names × Local / CI / Production map).
 
 name: CI
 

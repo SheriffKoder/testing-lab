@@ -17,7 +17,8 @@
 > [`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md),
 > [`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md),
 > [`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md),
-> [`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md).
+> [`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md),
+> [`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md).
 
 This table answers a different question than Phase 1–2:
 
@@ -27,7 +28,8 @@ This table answers a different question than Phase 1–2:
 
 Status: **Exists** = script already in `package.json`. PR/main gates
 (lint, types, Jest, Playwright, `next build`) are in CI (Items 2–5).
-Husky / required checks are still Item 7.
+Item 6 is a secrets / env review, not a new gate. Husky / required
+checks are still Item 7.
 
 ---
 
@@ -176,7 +178,8 @@ for every commit.
 | Soft unit gaps / “Nice” items | Still optional Jest polish — **not** extra CI jobs. |
 | No second integration runner | Jest owns mocked wiring; Playwright owns real persist. |
 
-Item 5 automates **Playwright** as a fourth job (`e2e`). Husky /
+Item 5 automates **Playwright** as a fourth job (`e2e`). Item 6
+documents which jobs receive Supabase env (only `e2e`). Husky /
 requiring those jobs by name is Item 7.
 
 ---

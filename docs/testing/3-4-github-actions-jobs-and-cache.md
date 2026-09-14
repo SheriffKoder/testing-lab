@@ -6,8 +6,9 @@
 > [`3-1-ci-checks-map.md`](./3-1-ci-checks-map.md).
 >
 > Next: Playwright in CI — Item 5
-> ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)). That item adds
-> the `e2e` job and report artifacts.
+> ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)). Secrets and
+> env — Item 6
+> ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
 
 Item 2–3 keep **one** job so the first gates are easy to read. Item 4
 asks whether that job should stay one column or become several, and adds
@@ -194,7 +195,8 @@ deploy pipeline yet (Item 8).
 
 - Playwright job + browser install — added in Item 5
   ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md))
-- Secrets / `.env.example` (Item 6)
+- Secrets / `.env.example` — Item 6
+  ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md))
 - Required checks / Husky (Item 7)
 - Deploy on green (Item 8)
 - Run `npm run verify` in YAML (local only; same command list as `npm run ci`)
@@ -243,7 +245,8 @@ e2e job uploads the Playwright report on failure
 
 The invoices page keeps the Supabase fetch behind `<Suspense>`, so
 `next build` can compile the static shell without `.env`. Request-time
-data still needs env (Item 6).
+data still needs env
+([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
 
 ### How to read a run
 

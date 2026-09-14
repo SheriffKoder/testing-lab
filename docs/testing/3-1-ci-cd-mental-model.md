@@ -14,6 +14,8 @@
 > ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)).
 > Playwright in CI — Item 5
 > ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)).
+> Secrets and env — Item 6
+> ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
 
 Phases 1 and 2 asked: *Does this code behave correctly?*
 
@@ -272,11 +274,16 @@ artifact on failure), `npm run verify`, and `npm run ci` now includes
 e2e. YAML still does not call `verify`. See
 [`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md).
 
-**Not a CI gate:** `npm run dev`, `npm start`, `test:watch`,
-`test:e2e:headed`, `test:e2e:ui`.
+**Added in Item 6:** Local / CI / Production env map; `.env.example`
+lists the two names the app reads; values stay in `.env` and
+repository secrets. No new CI job. See
+[`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md).
 
-**Later:** Husky (Item 7). `.env.example` already exists — Item 6 reviews
-secrets; do not expand it here.
+**Not a CI gate:** `npm run dev`, `npm start`, `test:watch`,
+`test:e2e:headed`, `test:e2e:ui`. Item 6 is a secrets review, not a
+gate.
+
+**Later:** Husky (Item 7).
 
 Layer choice still lives in
 [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).
