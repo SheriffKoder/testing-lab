@@ -7,10 +7,13 @@
 >
 > Next: jobs, cache, and `npm run build` — Item 4
 > ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)).
+> Playwright in CI — Item 5
+> ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)).
 
 Item 2 made lint and types unavoidable. Item 3 does the same for **Jest +
-RTL** (unit and mocked-wiring tests). Playwright stays **out** (Item 5).
-Job splits and `npm run build` stay **out** (Item 4).
+RTL** (unit and mocked-wiring tests). Playwright is a separate job in
+Item 5 ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)). Job
+splits and `npm run build` landed in Item 4.
 
 > Tests only become team safeguards when they run automatically.
 
@@ -153,10 +156,10 @@ because browsers are racy. Jest + jsdom should almost never need
 | Workflow | `.github/workflows/ci.yml` — Jest lives in the `tests` job (Item 4 split) |
 | Node | `24.12.0` (`.nvmrc` + `setup-node`) |
 | Test command | `npm test` (`jest`, non-watch) |
-| Local replica | `npm run ci` → lint + typecheck + test + build |
+| Local replica | `npm run ci` → lint + typecheck + test + test:e2e + build |
 | Jest config | `jest.config.ts` ignores `tests/e2e/` |
 | Coverage % gate | **None** |
-| Not in YAML | `test:watch`, Playwright, `npm run verify` |
+| Not in YAML | `test:watch`, `npm run verify` (local full sequence; YAML still calls the individual commands) |
 
 Item 3 added the Test step on a single `verify` job. Item 4 moved Jest
 into its own `tests` job (see
@@ -167,10 +170,10 @@ tests: checkout → setup-node → npm ci → test
 ```
 
 `npm run ci` matches today’s command list on your machine (including
-build). It is **not** `npm ci` (the lockfile install).
+e2e and build). It is **not** `npm ci` (the lockfile install).
 
-`npm run verify` (full PR sequence: also e2e) is still **not**
-in `package.json` and must **not** be the workflow command.
+`npm run verify` is the same five commands in `package.json`. It must
+**not** be the workflow command.
 
 ### How to read a run
 
@@ -182,6 +185,7 @@ On GitHub: **Actions** tab, or the PR checks list → `CI` → `tests`.
 | `quality` / Typecheck | `tsc --noEmit` |
 | `tests` / Test | Jest + RTL |
 | `build` / Build | `next build` |
+| `e2e` / E2E | Playwright |
 
 A Test failure is Jest output (suite name, assertion), not an ESLint
 filename list.
@@ -192,7 +196,7 @@ filename list.
 npm run ci
 ```
 
-Same four commands as today’s YAML, serial on your machine. CI still
+Same five commands as today’s YAML, serial on your machine. CI still
 starts each job from `npm ci` on a clean runner.
 
 ---

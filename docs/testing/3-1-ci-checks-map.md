@@ -12,10 +12,12 @@
 > the verified build. These are moments, not four extra testing phases.
 >
 > Local replica of **today’s** YAML: `npm run ci` (lint + typecheck + test +
-> build). Full PR sequence `npm run verify` is not added yet. Workflow:
+> test:e2e + build). Full PR sequence `npm run verify` exists locally; YAML
+> still calls the individual commands. Workflow:
 > [`3-2-github-actions-basics.md`](./3-2-github-actions-basics.md),
 > [`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md),
-> [`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md).
+> [`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md),
+> [`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md).
 
 This table answers a different question than Phase 1–2:
 
@@ -23,9 +25,9 @@ This table answers a different question than Phase 1–2:
 |---|---|
 | What is worth a unit test? Which layer? | When should this **command** run? |
 
-Status: **Exists** = script already in `package.json`. Workflow is
-**partial** until Item 5 (e2e). Jest and `next build` are in CI
-(Items 3–4).
+Status: **Exists** = script already in `package.json`. PR/main gates
+(lint, types, Jest, Playwright, `next build`) are in CI (Items 2–5).
+Husky / required checks are still Item 7.
 
 ---
 
@@ -69,12 +71,12 @@ Fast feedback. Can be skipped. Not what unlocks merge.
 | `npm run lint` | Catch style / Next lint errors before the PR | Exists |
 | `npm run typecheck` | Fast `tsc --noEmit` while editing | Exists |
 | `npm test` | Jest + RTL, once, non-watch | Exists — **CI in Item 3** |
-| `npm run ci` | Local replica of current YAML (lint + typecheck + test + build) | Exists |
+| `npm run ci` | Local replica of current YAML (lint + typecheck + test + e2e + build) | Exists |
 | `npm run test:watch` | Same suite while iterating — **not** a gate | Exists |
-| `npm run test:e2e` | When you touch invoice journeys | Exists |
+| `npm run test:e2e` | When you touch invoice journeys | Exists — **CI in Item 5** |
 | `npm run test:e2e:headed` / `test:e2e:ui` | Debug a red E2E — watch / scrub | Exists |
 | `npm run test:coverage` | Spotlight uncovered files (Phase 1) — no threshold | Exists |
-| `npm run verify` | Optional CI-like pass before push (full PR sequence) | Not added — do not confuse with the CI **job** `verify` |
+| `npm run verify` | Optional CI-like pass before push (full PR sequence) | Exists — local only; YAML still calls the individual commands |
 | Husky pre-commit (lint staged files) | Remind before commit; still bypassable | Item 7 — do not install now |
 
 ---
@@ -88,16 +90,17 @@ Full validation. Later **required** before merge.
 | `npm run lint` | Agreed lint must not land | Exists — **CI in Item 2** |
 | `npm run typecheck` | Type errors must not land | Exists — **CI in Item 2** |
 | `npm test` | Jest + RTL; non-watch; failed tests fail the job | Exists — **CI in Item 3** |
-| `npm run test:e2e` | Playwright journeys (Chromium, `CI=true` retries) | Exists — CI in Item 5 |
+| `npm run test:e2e` | Playwright journeys (Chromium, `CI=true` retries) | Exists — **CI in Item 5** |
 | `npm run build` | Next production compile; catches what tests miss | Exists — **CI in Item 4** |
 
-Jobs are `quality` (lint + typecheck), `tests` (`npm test`), and
-`build` (`npm run build`). Do **not** run `npm run verify` in the YAML —
-that script (not added yet) includes Playwright (Item 5). Use
-`npm run ci` locally for today’s gates.
+Jobs are `quality` (lint + typecheck), `tests` (`npm test`),
+`build` (`npm run build`), and `e2e` (`npm run test:e2e`). Do **not**
+run `npm run verify` in the YAML — that script is the local full PR
+sequence. Use `npm run ci` locally for today’s gates.
 
 `npm run ci` (local) matches the current command list, serial on your
-machine. `npm run verify` (later) is the full PR sequence.
+machine. `npm run verify` is the same five commands; neither is the
+workflow command.
 
 ---
 
@@ -169,21 +172,20 @@ for every commit.
 | Coverage is a **measurement**, not a score ([`1-8-testing-strategy.md`](./1-8-testing-strategy.md)) | `test:coverage` is local / optional report. No % threshold as a merge gate. |
 | Inventory ranks *what* is worth a unit test ([`1-8-testing-inventory.md`](./1-8-testing-inventory.md)) | CI does not add new unit cases. It **runs** `npm test`. |
 | Layer choice Jest / RTL / Playwright ([`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md)) | CI does not pick a new layer. `npm test` runs Jest+RTL; `test:e2e` runs Playwright. |
-| Playwright already reads `CI=true` (`retries`, `forbidOnly`, no server reuse) | Item 5’s job sets `CI`; config is already ready. |
+| Playwright already reads `CI=true` (`retries`, `forbidOnly`, no server reuse) | GitHub Actions sets `CI`; the `e2e` job runs `npm run test:e2e`. |
 | Soft unit gaps / “Nice” items | Still optional Jest polish — **not** extra CI jobs. |
 | No second integration runner | Jest owns mocked wiring; Playwright owns real persist. |
 
-Item 4 automates **lint + typecheck + Jest + `next build`** as three
-jobs. Naming e2e here is the reminder to add that job later — not
-permission to skip it.
+Item 5 automates **Playwright** as a fourth job (`e2e`). Husky /
+requiring those jobs by name is Item 7.
 
 ---
 
 ## Self-check
 
 **Do I have to run every local command before every push?**  
-No. Run the command that matches the change. Use `npm run verify` (once it
-exists) when you want the full PR sequence. The PR is still the gate.
+No. Run the command that matches the change. Use `npm run verify` when you
+want the full PR sequence. The PR is still the gate.
 
 **Does `npm run verify` replace CI?**  
 No. It is the same commands on **your** machine. CI proves them on a clean

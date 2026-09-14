@@ -9,6 +9,8 @@
 > ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md)). Jobs, cache, and
 > `npm run build` — Item 4
 > ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)).
+> Playwright in CI — Item 5
+> ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)).
 
 Item 1 decided **what** CI is and **when** each command should run. Item 2
 makes a **tiny** workflow real: checkout, Node, `npm ci`, lint, typecheck.
@@ -172,7 +174,8 @@ Leave for later items:
 - job split + `npm run build` — added in Item 4
   ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md));
   no `needs` yet
-- Playwright browsers + artifacts (Item 5)
+- Playwright browsers + artifacts — added in Item 5
+  ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md))
 - Secrets (Item 6)
 - Husky / branch protection (Item 7)
 - Deploy (Item 8)
@@ -201,21 +204,21 @@ job (Item 4). Item 2 wants a **fast** type gate.
 | Workflow | `.github/workflows/ci.yml` |
 | Name | `CI` |
 | Triggers | `pull_request`; `push` to `main` |
-| Jobs | `quality`, `tests`, `build` on `ubuntu-latest` (no `needs`) |
-| Actions | `actions/checkout@v7`, `actions/setup-node@v7` |
+| Jobs | `quality`, `tests`, `build`, `e2e` on `ubuntu-latest` (no `needs`) |
+| Actions | `actions/checkout@v7`, `actions/setup-node@v7`, `actions/upload-artifact@v7` (e2e failure) |
 | Node | `24.12.0` (exact pin; same as this machine and `.nvmrc`) |
 | Local pin | `.nvmrc` → `24.12.0` |
 | Install | `npm ci` + `cache: npm` (each job) |
-| Gates | lint + typecheck / `npm test` / `npm run build` (Items 2–4) |
-| Local replica | `npm run ci` (same four commands, serial; not `npm ci`) |
+| Gates | lint + typecheck / `npm test` / `npm run build` / `npm run test:e2e` (Items 2–5) |
+| Local replica | `npm run ci` (same five commands, serial; not `npm ci`) |
 | Local script | `"typecheck": "tsc --noEmit"` |
-| Not in YAML | Playwright, `npm run verify` |
+| Not in YAML | `npm run verify` (local full sequence; YAML still calls the individual commands) |
 | Lint fixes for a green first run | `tailwind.config.ts` ESM plugin import; ESLint ignores `coverage/` |
 
-The workflow is now three jobs: `quality` (lint + typecheck), `tests`
-(Jest), `build` (`next build`). `npm run verify` (full PR sequence) is
-**not** in `package.json` yet and must **not** be the workflow command —
-it would pull Playwright in too early.
+The workflow is now four jobs: `quality` (lint + typecheck), `tests`
+(Jest), `build` (`next build`), `e2e` (Playwright). `npm run verify`
+exists locally (same five commands as `npm run ci`) and must **not** be
+the workflow command — YAML still calls the individual scripts.
 
 `npm ci` must use the same **npm** that wrote `package-lock.json`. A
 floating `node-version: "24"` can install a newer 24.x (and a newer npm)
@@ -225,7 +228,7 @@ match.
 ### How to read a run
 
 On GitHub: **Actions** tab, or the checks list on a pull request. Open the
-`CI` workflow → a red **job** (`quality` vs `tests` vs `build`) is the
+`CI` workflow → a red **job** (`quality` vs `tests` vs `build` vs `e2e`) is the
 layer. Inside `quality`, a red step (`Lint` vs `Typecheck`) is the
 command.
 

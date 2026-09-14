@@ -12,6 +12,8 @@
 > Jest in CI — Item 3 ([`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md)).
 > Jobs and `next build` — Item 4
 > ([`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md)).
+> Playwright in CI — Item 5
+> ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)).
 
 Phases 1 and 2 asked: *Does this code behave correctly?*
 
@@ -265,8 +267,10 @@ Commands that already exist:
 `npm run build` as a gate, and `npm run ci` now includes build. See
 [`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md).
 
-**Still missing:** `npm run verify` (full local PR sequence: also e2e).
-Do not call it from the workflow — Playwright lands in Item 5.
+**Added in Item 5:** job `e2e` (Chromium + `npm run test:e2e` + report
+artifact on failure), `npm run verify`, and `npm run ci` now includes
+e2e. YAML still does not call `verify`. See
+[`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md).
 
 **Not a CI gate:** `npm run dev`, `npm start`, `test:watch`,
 `test:e2e:headed`, `test:e2e:ui`.

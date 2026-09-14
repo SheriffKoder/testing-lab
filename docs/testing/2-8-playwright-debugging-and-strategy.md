@@ -62,10 +62,12 @@ This repo’s default is `trace: "on-first-retry"`. A zip appears when a test
 **fails and then retries**. Locally `retries: 0`, so a fail does **not** write
 a zip unless you pass `--trace on` (then you get a zip for pass **or** fail).
 
-On CI (when a workflow exists), `CI=true` sets `retries: 2`. The first retry
-writes `test-results/.../trace.zip` on the runner. Open that file locally with
-`show-trace`. This lab has **no** `.github/workflows/` yet — the config is
-ready; nothing uploads artifacts today.
+On CI, `CI=true` sets `retries: 2`. The first retry writes
+`test-results/.../trace.zip` on the runner. The **e2e** job uploads
+`playwright-report/` and `test-results/` when that job **fails** —
+download the artifact from the Actions run, then open the HTML report
+or `npx playwright show-trace` on the zip. See
+[`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md).
 
 `test-results/` is gitignored. Delete it after you have looked.
 
@@ -235,8 +237,9 @@ write Playwright here.
 |---|---|
 | Scripts | `test:e2e`, `test:e2e:headed`, `test:e2e:ui` |
 | Local retries | `0` — fail once, read the log |
-| CI retries | `2` when `CI=true` (GitHub Actions would set this; no workflow file yet) |
+| CI retries | `2` when `CI=true` (GitHub Actions sets this on the runner) |
 | Trace default | `on-first-retry` — zip on the first **retry**, not every fail |
+| CI artifact | `e2e` job uploads `playwright-report/` + `test-results/` on failure (7 days; not a git commit) |
 | Local zip | Pass `--trace on`; file lands in `test-results/` (gitignored) |
 | Port | `PLAYWRIGHT_BASE_URL=http://localhost:3001` when `:3000` is another app |
 | Browsers | `PLAYWRIGHT_BROWSERS_PATH=$HOME/Library/Caches/ms-playwright` if headed cannot find Chromium |
