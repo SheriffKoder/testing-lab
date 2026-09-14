@@ -239,7 +239,7 @@ not hook it to YAML or pre-commit.
 | Command | `npm run test:e2e` (`playwright test`) |
 | Config | `playwright.config.ts` — `retries: 2`, `forbidOnly`, no server reuse, `trace: on-first-retry` when `CI=true` |
 | Artifact | `playwright-report/` + `test-results/` on **failure**; `actions/upload-artifact@v7`; 7 days |
-| Env | `NEXT_PUBLIC_SUPABASE_URL` from `vars`; `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from `secrets` — not `.env` on the runner |
+| Env | both from repository `secrets` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) — not `.env` on the runner |
 | Local replica | `npm run ci` → lint + typecheck + test + test:e2e + build (serial) |
 | Local full sequence | `npm run verify` — same command list; **not** a workflow command |
 | Not in YAML | `npm run verify`, `test:e2e:headed`, `test:e2e:ui` |
