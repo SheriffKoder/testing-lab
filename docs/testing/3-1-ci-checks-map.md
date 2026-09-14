@@ -18,7 +18,8 @@
 > [`3-3-tests-in-ci.md`](./3-3-tests-in-ci.md),
 > [`3-4-github-actions-jobs-and-cache.md`](./3-4-github-actions-jobs-and-cache.md),
 > [`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md),
-> [`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md).
+> [`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md),
+> [`3-7-git-guardrails.md`](./3-7-git-guardrails.md).
 
 This table answers a different question than Phase 1–2:
 
@@ -28,8 +29,9 @@ This table answers a different question than Phase 1–2:
 
 Status: **Exists** = script already in `package.json`. PR/main gates
 (lint, types, Jest, Playwright, `next build`) are in CI (Items 2–5).
-Item 6 is a secrets / env review, not a new gate. Husky / required
-checks are still Item 7.
+Item 6 is a secrets / env review, not a new gate. Husky pre-commit
+is installed (Item 7). Requiring the four jobs on `main` is GitHub
+Settings — see [`3-7-git-guardrails.md`](./3-7-git-guardrails.md).
 
 ---
 
@@ -46,11 +48,12 @@ Merge
 ```
 
 **Local** — You run these on your laptop while coding. Fast feedback.
-Skippable. Husky (Item 7) can remind you; it cannot replace CI.
+Skippable. Husky reminds you on commit; it cannot replace CI.
 
-**Pull request** — Clean runner, lockfile install. This is what later
-**blocks merge** (Item 7: required checks). Same commands as a careful
-local run; the difference is they cannot be forgotten.
+**Pull request** — Clean runner, lockfile install. This is what
+**blocks merge** when the four jobs are required checks. Same
+commands as a careful local run; the difference is they cannot be
+forgotten.
 
 **Main** — The **same** PR gates again on the commit that landed. Do not
 weaken them. After they pass, deployment may start (Item 8 / host).
@@ -79,13 +82,14 @@ Fast feedback. Can be skipped. Not what unlocks merge.
 | `npm run test:e2e:headed` / `test:e2e:ui` | Debug a red E2E — watch / scrub | Exists |
 | `npm run test:coverage` | Spotlight uncovered files (Phase 1) — no threshold | Exists |
 | `npm run verify` | Optional CI-like pass before push (full PR sequence) | Exists — local only; YAML still calls the individual commands |
-| Husky pre-commit (lint staged files) | Remind before commit; still bypassable | Item 7 — do not install now |
+| Husky pre-commit (lint staged files) | Remind before commit; still bypassable (`--no-verify`) | Exists — Item 7 |
 
 ---
 
 ## Pull request checks
 
-Full validation. Later **required** before merge.
+Full validation. **Required** before merge when branch protection
+lists the four job names (Item 7).
 
 | Command | Why | Status |
 |---|---|---|
@@ -149,8 +153,8 @@ replace the PR gate.
 ## When, not everything, every time
 
 ```text
-Pre-commit (Item 7)
-→ very fast (lint staged files)
+Pre-commit
+→ very fast (lint staged files — Husky)
 
 Local `npm run verify` (optional)
 → same sequence as the pull-request gate
@@ -179,8 +183,8 @@ for every commit.
 | No second integration runner | Jest owns mocked wiring; Playwright owns real persist. |
 
 Item 5 automates **Playwright** as a fourth job (`e2e`). Item 6
-documents which jobs receive Supabase env (only `e2e`). Husky /
-requiring those jobs by name is Item 7.
+documents which jobs receive Supabase env (only `e2e`). Item 7
+installs Husky and documents requiring those jobs by name.
 
 ---
 

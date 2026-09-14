@@ -9,6 +9,8 @@
 > ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)). Secrets and
 > env — Item 6
 > ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
+> Husky and branch protection — Item 7
+> ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md)).
 
 Item 2–3 keep **one** job so the first gates are easy to read. Item 4
 asks whether that job should stay one column or become several, and adds
@@ -197,7 +199,8 @@ deploy pipeline yet (Item 8).
   ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md))
 - Secrets / `.env.example` — Item 6
   ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md))
-- Required checks / Husky (Item 7)
+- Required checks / Husky — Item 7
+  ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md))
 - Deploy on green (Item 8)
 - Run `npm run verify` in YAML (local only; same command list as `npm run ci`)
 

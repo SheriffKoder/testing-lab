@@ -16,6 +16,8 @@
 > ([`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md)).
 > Secrets and env — Item 6
 > ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
+> Husky and branch protection — Item 7
+> ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md)).
 
 Phases 1 and 2 asked: *Does this code behave correctly?*
 
@@ -279,11 +281,15 @@ lists the two names the app reads; values stay in `.env` and
 repository secrets. No new CI job. See
 [`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md).
 
+**Added in Item 7:** Husky pre-commit (`lint-staged` → `eslint` on
+staged `*.{js,jsx,ts,tsx}`). `npm run verify` is still not a hook.
+Branch protection is Settings (classic rule on `main`; require the
+four job names). See
+[`3-7-git-guardrails.md`](./3-7-git-guardrails.md).
+
 **Not a CI gate:** `npm run dev`, `npm start`, `test:watch`,
 `test:e2e:headed`, `test:e2e:ui`. Item 6 is a secrets review, not a
-gate.
-
-**Later:** Husky (Item 7).
+gate. Husky is local convenience, not a CI job.
 
 Layer choice still lives in
 [`2-8-playwright-debugging-and-strategy.md`](./2-8-playwright-debugging-and-strategy.md).

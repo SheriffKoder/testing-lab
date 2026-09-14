@@ -4,7 +4,8 @@
 >
 > Builds on [`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md).
 >
-> Next: Husky and branch protection — Item 7.
+> Next: Husky and branch protection — Item 7
+> ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md)).
 
 Item 5 can run Playwright only if the runner sees Supabase config.
 Item 6 is why those values are not in git, what is public vs privileged,
@@ -168,7 +169,8 @@ privileged key in the browser.
 ## What this item does **not** do
 
 - Playwright job itself (Item 5)
-- Husky / branch protection (Item 7)
+- Husky / branch protection — Item 7
+  ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md))
 - Vercel project wiring (Item 8)
 - Adding a service-role key “for completeness”
 - Committing `.env`

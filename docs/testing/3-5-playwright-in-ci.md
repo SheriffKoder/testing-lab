@@ -7,6 +7,8 @@
 >
 > Next: secrets, env, and environments — Item 6
 > ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md)).
+> Husky and branch protection — Item 7
+> ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md)).
 
 Items 2–4 made lint, types, Jest, and `next build` unavoidable on a clean
 runner. Item 5 does the same for **Playwright**. Secrets get a full
@@ -214,7 +216,8 @@ No privileged service-role key. No secrets in the workflow file.
 
 - Full secrets / environments write-up — Item 6
   ([`3-6-ci-secrets-and-environments.md`](./3-6-ci-secrets-and-environments.md))
-- Required checks / Husky (Item 7)
+- Required checks / Husky — Item 7
+  ([`3-7-git-guardrails.md`](./3-7-git-guardrails.md))
 - Deploy on green (Item 8)
 - Firefox / WebKit
 - `test:e2e:headed` / `test:e2e:ui` in YAML
