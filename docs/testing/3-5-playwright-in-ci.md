@@ -237,8 +237,8 @@ not hook it to YAML or pre-commit.
 | Cache | `cache: npm` (lockfile key; does not install browsers) |
 | Browsers | `npx playwright install --with-deps chromium` |
 | Command | `npm run test:e2e` (`playwright test`) |
-| Config | `playwright.config.ts` — `retries: 2`, `forbidOnly`, no server reuse, `trace: on-first-retry` when `CI=true` |
-| Artifact | `playwright-report/` + `test-results/` on **failure**; `actions/upload-artifact@v7`; 7 days |
+| Config | `playwright.config.ts` — `retries: 2`, `forbidOnly`, no server reuse, `trace: on-first-retry` when `CI=true`; `reporter: list` + `html` |
+| Artifact | `playwright-report/` (`index.html`) + `test-results/` on **failure**; `actions/upload-artifact@v7`; 7 days |
 | Env | both from repository `secrets` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) — not `.env` on the runner |
 | Local replica | `npm run ci` → lint + typecheck + test + test:e2e + build (serial) |
 | Local full sequence | `npm run verify` — same command list; **not** a workflow command |
@@ -279,8 +279,14 @@ On GitHub: **Actions** tab, or the PR checks list → `CI`.
 | `e2e` | Playwright (Chromium + `webServer`) |
 
 On a red `e2e` job: open the job log, then download the
-`playwright-report` artifact. Unzip it, open `index.html`, or run
-`npx playwright show-trace` on a `trace.zip` under `test-results/`.
+`playwright-report` artifact. Unzip it:
+
+- `playwright-report/index.html` — suite index (CI). Locally each run is
+  `playwright-report/<timestamp>/index.html` so history is not overwritten.
+- `test-results/…/trace.zip` — `npx playwright show-trace` on a first-retry zip.
+  Locally that is `test-results/<timestamp>/` (same stamp as the HTML report).
+
+Do not browse `trace/resources/*.html`; those are DOM snapshots, not the report.
 
 ### How to run locally
 

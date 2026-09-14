@@ -65,11 +65,15 @@ a zip unless you pass `--trace on` (then you get a zip for pass **or** fail).
 On CI, `CI=true` sets `retries: 2`. The first retry writes
 `test-results/.../trace.zip` on the runner. The **e2e** job uploads
 `playwright-report/` and `test-results/` when that job **fails** —
-download the artifact from the Actions run, then open the HTML report
-or `npx playwright show-trace` on the zip. See
+download the artifact from the Actions run, then open
+`playwright-report/index.html` (suite report) or
+`npx playwright show-trace` on a `trace.zip`. See
 [`3-5-playwright-in-ci.md`](./3-5-playwright-in-ci.md).
 
-`test-results/` is gitignored. Delete it after you have looked.
+`test-results/` is gitignored. Locally each run is
+`test-results/<timestamp>/` so history is kept. On CI the folder is
+flat (the Actions run is the version). Delete old stamps when you no
+longer need them.
 
 ### Screenshots and videos
 
@@ -239,8 +243,9 @@ write Playwright here.
 | Local retries | `0` — fail once, read the log |
 | CI retries | `2` when `CI=true` (GitHub Actions sets this on the runner) |
 | Trace default | `on-first-retry` — zip on the first **retry**, not every fail |
-| CI artifact | `e2e` job uploads `playwright-report/` + `test-results/` on failure (7 days; not a git commit) |
-| Local zip | Pass `--trace on`; file lands in `test-results/` (gitignored) |
+| CI artifact | `e2e` job uploads `playwright-report/index.html` + `test-results/` on failure (7 days; not a git commit) |
+| HTML report | `reporter: [["list"], ["html"]]` — local: `playwright-report/<timestamp>/`; CI: `playwright-report/`. `npx playwright show-report <folder>` |
+| Local zip | Pass `--trace on`; file lands in `test-results/<timestamp>/` (gitignored; same stamp as the HTML report) |
 | Port | `PLAYWRIGHT_BASE_URL=http://localhost:3001` when `:3000` is another app |
 | Browsers | `PLAYWRIGHT_BROWSERS_PATH=$HOME/Library/Caches/ms-playwright` if headed cannot find Chromium |
 | Cypress | **Not** installed |

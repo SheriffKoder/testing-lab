@@ -244,13 +244,13 @@ Exact wiring for this lab (Item 2):
 |---|---|
 | Install | `npm install -D @playwright/test` then `npx playwright install chromium` (user cache: `~/Library/Caches/ms-playwright`) |
 | Runner version | `@playwright/test` 1.63.x |
-| Config | `playwright.config.ts` (repo root) |
+| Config | `playwright.config.ts` (repo root) — `list` + `html` reporters (`playwright-report/<timestamp>/` locally, gitignored) |
 | `testDir` | `./tests/e2e` (FSD; not overview’s root `e2e/`) |
 | `baseURL` | `http://localhost:3000` |
 | `webServer` | `npm run dev`, reuse local server when not `CI` |
 | Project | Chromium only (`Desktop Chrome`) |
 | Smoke spec | `tests/e2e/invoices.spec.ts` |
-| Artifacts ignored | `test-results/`, `playwright-report/`, `blob-report/`, `playwright/.cache/` |
+| Artifacts ignored | `test-results/` (local: `<timestamp>/` subfolders), `playwright-report/`, `blob-report/`, `playwright/.cache/` |
 
 If `test:e2e` / `test:e2e:headed` fails with `Executable doesn't exist`, the npm
 package is present but Chromium is missing from the user cache — see **Browser
