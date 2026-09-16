@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { WebVitalsReporter } from "@/shared/performance";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -33,6 +34,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          {/* Tiny client island — LCP/INP/CLS via next/web-vitals (Item 7). */}
+          <WebVitalsReporter />
           {children}
         </ThemeProvider>
       </body>
