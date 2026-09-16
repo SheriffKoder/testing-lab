@@ -11,6 +11,6 @@
  * 1. Re-export server-only query/mutation entry points from here only.
  */
 
-export { listInvoices } from "./queries/list-invoices";
+export { listInvoices, INVOICES_CACHE_TAG } from "./queries/list-invoices";
 export { createInvoice } from "./mutations/create-invoice";
 export type { CreateInvoiceInput } from "./mutations/create-invoice";

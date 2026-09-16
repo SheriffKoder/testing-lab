@@ -10,13 +10,16 @@
  * Steps:
  * 1. Accept the feature form payload (NewInvoiceInput).
  * 2. Call createInvoice from @/entities/invoice/server.
- * 3. Return the created Invoice; rethrow on failure so the view can show an alert.
+ * 3. Invalidate the invoices list Data Cache (read-your-own-writes).
+ * 4. Return the created Invoice; rethrow on failure so the view can show an alert.
  */
 
 "use server";
 
+import { updateTag } from "next/cache";
 import {
   createInvoice,
+  INVOICES_CACHE_TAG,
   type CreateInvoiceInput,
 } from "@/entities/invoice/server";
 import type { Invoice } from "@/entities/invoice";
@@ -41,5 +44,11 @@ export async function createInvoiceAction(
     dueDate: input.dueDate,
   };
 
-  return createInvoice(entityInput);
+  const invoice = await createInvoice(entityInput);
+
+  // Bust list cache so /invoices shows the new row after router.refresh()
+  // instead of waiting for the 2-minute revalidate window.
+  updateTag(INVOICES_CACHE_TAG);
+
+  return invoice;
 }
