@@ -244,25 +244,24 @@ Warns surface in logs without failing the job by themselves; errors fail the
 
 ---
 
-## Regression exercise (Step 4 — in progress)
+## Regression exercise (Step 4 — done)
 
-**Intentional break (this PR):** a large **blocking** script on `/invoices` only.
+Proved the gate with a temporary large **blocking** script on `/invoices`, then
+removed it.
 
-| Piece | Detail |
+| Phase | Result |
 |---|---|
-| Asset | [`public/item-8-regression-blocking.js`](../../public/item-8-regression-blocking.js) (high-entropy ~560 kB source; gzip stays large) |
-| Injection | [`app/invoices/layout.tsx`](../../app/invoices/layout.tsx) — sync `<script src>` (no async/defer) |
-| Expected CI | `lighthouse` job **fails** on `resource-summary:script:size` (error max 400000) |
-| May also | Soft-warn LCP / performance score from main-thread / parse cost |
+| Break | Sync `<script src>` + high-entropy `public/item-8-regression-blocking.js` via `app/invoices/layout.tsx` |
+| CI catch | `resource-summary:script:size` **error** — expected ≤ 400000, found **592970**; LCP **warn** ~4355 ms (≤ 4000) |
+| Fix | Deleted layout + public asset; no intentional regression left on the branch |
 
-**Lesson (first attempt):** a 450 kB file of repeated `a` characters gzip’d to **~685 bytes**.
-LHCI’s `resource-summary:script:size` budget is **transfer size**, so the
-assertion still passed. Regenerated with **random / base64** payload so
-compression cannot hide the balloon.
+**Debugging path used (same as a real PR):** failed assertion in the job log →
+which budget → `git diff` / Network for the new JS URL → remove the owner of
+the weight → re-run LHCI.
 
-**Not** left on `main` after the drill. After GitHub Actions shows the red
-`lighthouse` check, remove the layout script + public asset, confirm green,
-and mark this section complete with before/after notes.
+**Lesson:** LHCI script budgets use **transfer size**. A 450 kB file of
+repeated `a` gzip’d to ~685 bytes and still passed; an incompressible payload
+was required to trip the error.
 
 ---
 
@@ -271,7 +270,7 @@ and mark this section complete with before/after notes.
 1. ~~Inspect existing Phase 3 GitHub Actions workflow(s).~~ **Done**.
 2. ~~Add LHCI config; collect against `/invoices` on `next build` + `next start`.~~ **Done**.
 3. ~~Wire a **small** assertion set (warn/fail sensibly; no score 100).~~ **Done**.
-4. **Regression exercise:** intentional break → CI catches → fix → green (**break is in this PR**).
+4. ~~Regression exercise: intentional break → CI catches → fix → green.~~ **Done**.
 5. Draft [`4-8-performance-strategy.md`](./4-8-performance-strategy.md)
    (phase wrap-up: metrics → diagnostics → local → CI → production).
 
@@ -319,5 +318,5 @@ scores.
 | Concepts doc (this file) | **Done** |
 | Inspect Phase 3 CI | **Done** |
 | LHCI config + GitHub Actions | **Done** (Option A: `lighthouse` job) |
-| Regression exercise | **In progress** — large blocking script on `/invoices` (expect LHCI fail) |
+| Regression exercise | **Done** — catch (script size 592970) → remove break → expect green |
 | `4-8-performance-strategy.md` | Pending |
