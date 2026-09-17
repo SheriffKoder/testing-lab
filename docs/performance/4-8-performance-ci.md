@@ -2,9 +2,8 @@
 
 > Phase 4 · Item 8 · Concepts / explanation.
 >
-> Companion strategy (phase wrap-up — later plan steps):
-> [`4-8-performance-strategy.md`](./4-8-performance-strategy.md)
-> (not created yet).
+> Companion strategy (phase wrap-up):
+> [`4-8-performance-strategy.md`](./4-8-performance-strategy.md).
 >
 > Builds on:
 > [`4-7-performance-monitoring-strategy.md`](./4-7-performance-monitoring-strategy.md)
@@ -265,14 +264,13 @@ was required to trip the error.
 
 ---
 
-## Build (remaining plan steps)
+## Build (complete)
 
 1. ~~Inspect existing Phase 3 GitHub Actions workflow(s).~~ **Done**.
 2. ~~Add LHCI config; collect against `/invoices` on `next build` + `next start`.~~ **Done**.
 3. ~~Wire a **small** assertion set (warn/fail sensibly; no score 100).~~ **Done**.
 4. ~~Regression exercise: intentional break → CI catches → fix → green.~~ **Done**.
-5. Draft [`4-8-performance-strategy.md`](./4-8-performance-strategy.md)
-   (phase wrap-up: metrics → diagnostics → local → CI → production).
+5. ~~Draft [`4-8-performance-strategy.md`](./4-8-performance-strategy.md).~~ **Done**.
 
 Primary URL and serve target remain locked: `/invoices`, production build only.
 
@@ -318,5 +316,6 @@ scores.
 | Concepts doc (this file) | **Done** |
 | Inspect Phase 3 CI | **Done** |
 | LHCI config + GitHub Actions | **Done** (Option A: `lighthouse` job) |
-| Regression exercise | **Done** — catch (script size 592970) → remove break → expect green |
-| `4-8-performance-strategy.md` | Pending |
+| Regression exercise | **Done** — catch (script size 592970) → remove → CI green |
+| `4-8-performance-strategy.md` | **Done** |
+| Item 8 | **Complete** |
