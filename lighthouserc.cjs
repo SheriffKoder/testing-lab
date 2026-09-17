@@ -25,6 +25,8 @@ module.exports = {
       settings: {
         // Mobile throttling defaults (matches Item 2/3 lab form factor).
         onlyCategories: ["performance"],
+        // Required on GitHub-hosted runners (AppArmor / no userns sandbox).
+        chromeFlags: "--no-sandbox --disable-dev-shm-usage",
       },
     },
     assert: {

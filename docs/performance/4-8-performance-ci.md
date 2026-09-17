@@ -207,6 +207,7 @@ inside the workflow (jobs call the individual commands). Phase 3 docs:
 | E2E serve style | Playwright `webServer` uses **`npm run dev`** — unchanged |
 | Build job | Production compile only — does **not** start a server — unchanged |
 | LHCI | [`lighthouserc.cjs`](../../lighthouserc.cjs) + `@lhci/cli`; `npm run lhci` |
+| Chrome on GHA | `chromeFlags: --no-sandbox --disable-dev-shm-usage` (runner sandbox) |
 | Deploy | Vercel (outside this workflow) — no deploy job for Item 8 |
 
 ### Where LHCI attached (Option A — done)
