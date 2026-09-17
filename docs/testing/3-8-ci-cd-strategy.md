@@ -294,14 +294,15 @@ Coverage **percentage** stays off the merge gate
 
 | Piece | Value |
 |---|---|
-| Verify | `.github/workflows/ci.yml` — `quality`, `tests`, `build`, `e2e` |
+| Verify | `.github/workflows/ci.yml` — `quality`, `tests`, `build`, `e2e`, `lighthouse` (Item 8) |
 | Deploy job in Actions | **None** — by design |
 | `VERCEL_TOKEN` | **Not** in repository secrets |
-| Merge gate | Item 7: PR + four required checks; admins enforced |
+| Merge gate | Item 7: PR + required checks; admins enforced (add `lighthouse` when branch protection is updated) |
 | Host | **Vercel** planned; **not connected** in this pass |
 | Host env (when connected) | Same two names as local / CI; Preview + Production scopes |
 | Playwright | Still `webServer` + localhost + Supabase secrets on `e2e` |
-| Local full sequence | `npm run verify` — opt-in; not YAML |
+| Lighthouse CI | Production `next start` + `/invoices` budgets — see [`4-8-performance-ci.md`](../performance/4-8-performance-ci.md) |
+| Local full sequence | `npm run verify` — opt-in; not YAML (`lhci` is separate) |
 
 ```text
 Local     .env
