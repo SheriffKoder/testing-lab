@@ -250,10 +250,15 @@ Warns surface in logs without failing the job by themselves; errors fail the
 
 | Piece | Detail |
 |---|---|
-| Asset | [`public/item-8-regression-blocking.js`](../../public/item-8-regression-blocking.js) (~450 kB) |
+| Asset | [`public/item-8-regression-blocking.js`](../../public/item-8-regression-blocking.js) (high-entropy ~560 kB source; gzip stays large) |
 | Injection | [`app/invoices/layout.tsx`](../../app/invoices/layout.tsx) — sync `<script src>` (no async/defer) |
 | Expected CI | `lighthouse` job **fails** on `resource-summary:script:size` (error max 400000) |
 | May also | Soft-warn LCP / performance score from main-thread / parse cost |
+
+**Lesson (first attempt):** a 450 kB file of repeated `a` characters gzip’d to **~685 bytes**.
+LHCI’s `resource-summary:script:size` budget is **transfer size**, so the
+assertion still passed. Regenerated with **random / base64** payload so
+compression cannot hide the balloon.
 
 **Not** left on `main` after the drill. After GitHub Actions shows the red
 `lighthouse` check, remove the layout script + public asset, confirm green,
