@@ -1,109 +1,159 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+# testing-lab
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+**Description:**
+Reference lab for introducing **testing, CI/CD, and performance** into an existing Next.js codebase. Practices ship phase by phase under `docs/`; the practice ground is a small invoice app on Supabase. The product is intentionally simple — the goal is learning why a team adds each practice, how it is wired, and how you verify it works.
 
-## Features
+**Applications:**  
+MindFree: Authenticated user note edit ([tests](https://github.com/SheriffKoder/MindFree-notes-tasks-tracker/tree/main/docs/testing) / [CI](https://github.com/SheriffKoder/MindFree-notes-tasks-tracker/tree/main/docs/ci))
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
 
-## Demo
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+## Layout
 
-## Deploy to Vercel
+| Area | Role |
+|------|------|
+| `docs/testing/` | Phase 1–3 concepts and strategy |
+| `docs/performance/` | Phase 4 Core Web Vitals and LHCI |
+| `entities/` · `features/` · `views/` · `shared/` | FSD app layers (invoice domain) |
+| `tests/` | Jest/RTL unit + integration, Playwright e2e |
+| `app/` | Route entrypoints (`/invoices`, lab chrome) |
+| `.github/workflows/` | CI (quality, tests, build, e2e, lighthouse) |
 
-Vercel deployment will guide you through creating a Supabase account and project.
+## Run
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+```bash
+npm install
+cp .env.example .env   # fill NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+npm run dev
+```
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+Open [http://localhost:3000/invoices](http://localhost:3000/invoices).
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+Useful gates:
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+```bash
+npm test                 # Jest + RTL
+npm run test:e2e         # Playwright
+npm run verify           # lint → typecheck → Jest → e2e → build
+npm run build && npm run lhci   # local Lighthouse CI (needs Chrome + env)
+```
 
-## Clone and run locally
+---
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+## Lab phases
 
-2. Create a Next.js app using the Supabase Starter template npx command
+### Phase 0 — App foundation
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+| | |
+|---|---|
+| **Status** | Done |
+| **Description** | Next.js + TypeScript + Tailwind + Supabase starter with `tl_invoices` and a list page so later phases have real code to protect. |
+| **Outcome** | `/invoices` — invoice table backed by Supabase. |
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+Tracked plans live under [`app/development/testing/`](./app/development/testing/). Product brief: [`PRODUCT-REFERENCE.md`](./app/development/testing/PRODUCT-REFERENCE.md).
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+---
 
-3. Use `cd` to change into the app's directory
+### Phase 1 — Jest + React Testing Library
 
-   ```bash
-   cd with-supabase-app
-   ```
+| | |
+|---|---|
+| **Status** | Done |
+| **Description** | Incremental unit and component testing: behavior over implementation, confidence over coverage %, pyramid tradeoffs. |
+| **Outcome** | Jest + RTL suite around invoice helpers, table, form interactions, async list states, and mocked create-invoice. |
 
-4. Rename `.env.example` to `.env.local` and update the following:
+**How it lands in the repo:** tests live under `tests/unit` and `tests/integration`; coverage is scoped to FSD layers (not thin `app/` shells or shadcn chrome). Coverage % is a spotlight, not a merge gate.
 
-  ```env
-  NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
-  ```
-  > [!NOTE]
-  > This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
-  > Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
-  > See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
+| Item | Doc |
+|------|-----|
+| 1 Testing philosophy | [`1-1-testing-philosophy.md`](./docs/testing/1-1-testing-philosophy.md) |
+| 2 Jest environment | [`1-2-jest-environment.md`](./docs/testing/1-2-jest-environment.md) |
+| 3 Unit tests | [`1-3-unit-tests.md`](./docs/testing/1-3-unit-tests.md) |
+| 4 Component tests | [`1-4-component-tests.md`](./docs/testing/1-4-component-tests.md) |
+| 5 User interactions | [`1-5-user-interactions.md`](./docs/testing/1-5-user-interactions.md) |
+| 6 Async testing | [`1-6-async-testing.md`](./docs/testing/1-6-async-testing.md) |
+| 7 Mocking | [`1-7-mocking.md`](./docs/testing/1-7-mocking.md) |
+| 8 Coverage strategy | [`1-8-testing-strategy.md`](./docs/testing/1-8-testing-strategy.md) · [`1-8-testing-inventory.md`](./docs/testing/1-8-testing-inventory.md) |
 
-  Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+---
 
-5. You can now run the Next.js local development server:
+### Phase 2 — Playwright
 
-   ```bash
-   npm run dev
-   ```
+| | |
+|---|---|
+| **Status** | Done |
+| **Description** | Protect real user journeys in a browser: locators, waiting, isolation, network control, and when E2E beats Jest/RTL. |
+| **Outcome** | Playwright e2e under `tests/e2e` against the Next.js app (`playwright.config.ts` + `webServer`). |
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+**How it lands in the repo:** E2E answers “can a user finish this workflow?” — not every button. Layer choice per invoice behavior is in the Phase 2 strategy doc.
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+| Item | Doc |
+|------|-----|
+| 1 E2E mental model | [`2-1-e2e-mental-model.md`](./docs/testing/2-1-e2e-mental-model.md) · [`2-1-invoice-test-boundaries.md`](./docs/testing/2-1-invoice-test-boundaries.md) |
+| 2 Playwright setup | [`2-2-playwright-setup.md`](./docs/testing/2-2-playwright-setup.md) |
+| 3 Locators | [`2-3-playwright-locators.md`](./docs/testing/2-3-playwright-locators.md) |
+| 4 User journeys | [`2-4-e2e-user-journeys.md`](./docs/testing/2-4-e2e-user-journeys.md) |
+| 5 Waiting | [`2-5-playwright-waiting.md`](./docs/testing/2-5-playwright-waiting.md) |
+| 6 Isolation | [`2-6-playwright-test-isolation.md`](./docs/testing/2-6-playwright-test-isolation.md) |
+| 7 Network testing | [`2-7-playwright-network-testing.md`](./docs/testing/2-7-playwright-network-testing.md) |
+| 8 Debugging & strategy | [`2-8-playwright-debugging-and-strategy.md`](./docs/testing/2-8-playwright-debugging-and-strategy.md) |
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+---
 
-## Feedback and issues
+### Phase 3 — CI/CD
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+| | |
+|---|---|
+| **Status** | Done |
+| **Description** | Automate verification on every PR: GitHub Actions jobs, Playwright in CI, secrets, Husky, branch protection. Actions proves; Vercel (planned) ships — no deploy job in YAML. |
+| **Outcome** | `.github/workflows/ci.yml` — `quality`, `tests`, `build`, `e2e` (plus Phase 4 `lighthouse`). Local mirror: `npm run verify`. |
 
-## More Supabase examples
+**How it lands in the repo:** merge to `main` requires green checks. Playwright still hits localhost + Supabase secrets, not a preview URL. Host deploy stays out of Actions by design.
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+| Item | Doc |
+|------|-----|
+| 1 CI/CD mental model | [`3-1-ci-cd-mental-model.md`](./docs/testing/3-1-ci-cd-mental-model.md) · [`3-1-ci-checks-map.md`](./docs/testing/3-1-ci-checks-map.md) |
+| 2 Actions basics | [`3-2-github-actions-basics.md`](./docs/testing/3-2-github-actions-basics.md) |
+| 3 Tests in CI | [`3-3-tests-in-ci.md`](./docs/testing/3-3-tests-in-ci.md) |
+| 4 Jobs & cache | [`3-4-github-actions-jobs-and-cache.md`](./docs/testing/3-4-github-actions-jobs-and-cache.md) |
+| 5 Playwright in CI | [`3-5-playwright-in-ci.md`](./docs/testing/3-5-playwright-in-ci.md) |
+| 6 Secrets & environments | [`3-6-ci-secrets-and-environments.md`](./docs/testing/3-6-ci-secrets-and-environments.md) |
+| 7 Git guardrails | [`3-7-git-guardrails.md`](./docs/testing/3-7-git-guardrails.md) |
+| 8 CI/CD strategy | [`3-8-ci-cd-strategy.md`](./docs/testing/3-8-ci-cd-strategy.md) |
+
+---
+
+### Phase 4 — Core Web Vitals & performance
+
+| | |
+|---|---|
+| **Status** | Done |
+| **Description** | Measure, diagnose, and protect frontend performance on `/invoices`: lab tools, LCP work, Next.js architecture, RUM concepts, Lighthouse CI budgets. |
+| **Outcome** | LHCI on production `next start` + `/invoices` budgets in CI; optional `WebVitalsReporter` for field-shaped signals. |
+
+**How it lands in the repo:** soft score/LCP warns, hard CLS and script-size errors — not score 100 on every PR. Lab CI does not replace production RUM.
+
+| Item | Doc |
+|------|-----|
+| 1 Core Web Vitals | [`4-1-core-web-vitals-mental-model.md`](./docs/performance/4-1-core-web-vitals-mental-model.md) · [`4-1-invoices-performance-hypothesis.md`](./docs/performance/4-1-invoices-performance-hypothesis.md) |
+| 2 Measurement tools | [`4-2-performance-measurement-tools.md`](./docs/performance/4-2-performance-measurement-tools.md) · [`4-2-performance-baseline.md`](./docs/performance/4-2-performance-baseline.md) |
+| 3 LCP | [`4-3-lcp-optimization.md`](./docs/performance/4-3-lcp-optimization.md) · [`4-3-lcp-experiment.md`](./docs/performance/4-3-lcp-experiment.md) |
+| 4 CLS | Concepts-only (lab CLS was already 0) |
+| 5 INP | [`4-5-inp-and-interactivity.md`](./docs/performance/4-5-inp-and-interactivity.md) |
+| 6 Next.js performance | [`4-6-nextjs-performance.md`](./docs/performance/4-6-nextjs-performance.md) · [`4-6-nextjs-performance-audit.md`](./docs/performance/4-6-nextjs-performance-audit.md) |
+| 7 RUM | [`4-7-real-user-monitoring.md`](./docs/performance/4-7-real-user-monitoring.md) · [`4-7-performance-monitoring-strategy.md`](./docs/performance/4-7-performance-monitoring-strategy.md) |
+| 8 LHCI & budgets | [`4-8-performance-ci.md`](./docs/performance/4-8-performance-ci.md) · [`4-8-performance-strategy.md`](./docs/performance/4-8-performance-strategy.md) |
+
+---
+
+## Key insight
+
+```text
+Phase 1  Does this unit behave correctly?
+Phase 2  Can a user finish the journey?
+Phase 3  Is every change verified before merge?
+Phase 4  Is the experience still fast and stable?
+```
+
+Start each new feature by asking what behavior is valuable enough to protect — then pick the cheapest layer that protects it.
