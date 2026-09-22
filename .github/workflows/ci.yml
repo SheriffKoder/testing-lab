@@ -1,12 +1,15 @@
-# CI — quality, tests, build, and Playwright e2e (Phase 3 Item 5).
+# CI — quality, tests, build, Playwright e2e (Phase 3 Item 5), and
+# Lighthouse CI on production `/invoices` (Phase 4 Item 8).
 # Do not run `npm run verify` here: that local script is the full PR
 # sequence. YAML still calls the individual commands.
 #
-# Four jobs, no `needs`: they start in parallel so a lint fail and an
+# Five jobs, no `needs`: they start in parallel so a lint fail and an
 # e2e fail can both show. Each runner is clean, so each job repeats npm ci.
-# The e2e job also installs Chromium. `cache: npm` keys off the lockfile
-# and does not change what is installed. Supabase env is on the e2e job
-# only (Item 6 documents the names × Local / CI / Production map).
+# The e2e and lighthouse jobs install Chromium. `cache: npm` keys off the
+# lockfile and does not change what is installed. Supabase env is on the
+# e2e and lighthouse jobs (Item 6 documents the names × Local / CI /
+# Production map). Existing jobs are unchanged — LHCI does not share a
+# server with Playwright (`next dev`) or the compile-only `build` job.
 
 name: CI
 
@@ -107,3 +110,44 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+  # Option A: parallel job. Builds + `next start` only for LHCI.
+  # Does not change `build` (compile-only) or `e2e` (`next dev`).
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24.12.0"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: npm run build
+
+      - name: Lighthouse CI
+        run: |
+          export CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")"
+          npm run lhci
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          if-no-files-found: ignore
+          retention-days: 14

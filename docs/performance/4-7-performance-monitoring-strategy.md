@@ -181,7 +181,8 @@ interaction path (or third parties), not in “run Lighthouse again.”
 
 ## Hand-off
 
-Next (Item 8): Lighthouse CI, performance budgets, regression protection —
-wire automated checks to Phase 3 GitHub Actions against a production-style
-`/invoices` build. Use Item 2/3/6 baselines for thresholds; do not require
-score 100.
+Item 8 complete: Lighthouse CI + budgets on production `/invoices`, regression
+drill proven, phase strategy in
+[`4-8-performance-strategy.md`](./4-8-performance-strategy.md).
+Phase 4 closed — measure → improve selectively → protect in CI → understand
+field.
